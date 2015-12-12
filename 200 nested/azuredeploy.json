@@ -20,7 +20,7 @@
     },
     "uri": {
       "templateBase": "https://raw.githubusercontent.com/marcvaneijk/armdemo/master/nestedtemplatelayout/",
-      "optionalTemplateRelative" : "[concat('nested/optional_', parameters('optionalResource'),'.json')]"
+      "optionalTemplateRelative": "[concat('nested/optional_', parameters('optionalResource'),'.json')]"
     }
   },
   "resources": [
@@ -53,7 +53,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[variables('apiVersion')]"
+            "value": "[parameters('optionalResource')]"
           }
         }
       }
@@ -70,7 +70,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[variables('apiVersion')]"
+            "value": "[parameters('optionalResource')]"
           }
         }
       }
@@ -87,7 +87,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[variables('apiVersion')]"
+            "value": "[parameters('optionalResource')]"
             }
           }
         }
