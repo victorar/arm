@@ -1,0 +1,86 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  },
+  "variables": {
+    "apiVersion": {
+      "deployment": "2015-01-01"
+    },
+    "uri": {
+      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/armdemo/master/nestedtemplatelayout/"
+    }
+  },
+  "resources": [
+    {
+      "name": "sharedresources",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion').deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(variables('uri').templateBase, 'nested/sharedresources.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "optional",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion').deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(variables('uri').templateBase, 'nested/optional.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "memberresources1",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion').deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(variables('uri').templateBase, 'nested/memberresources1.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
+          }
+        }
+      }
+    },
+        {
+      "name": "memberresources2",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion').deployment]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(variables('uri').templateBase, 'nested/memberresources1.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
+            }
+          }
+        }
+      }
+  ],
+    "outputs": {
+    }
+}
