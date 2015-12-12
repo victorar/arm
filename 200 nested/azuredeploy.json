@@ -2,13 +2,25 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "optionalResource": {
+      "type": "string",
+      "defaultValue": "configured",
+      "allowedValues": [
+        "configured",
+        "notconfigured"
+      ],
+      "metadata": {
+        "description": "Based on this value a different nested template is deployed"
+      }
+    }
   },
   "variables": {
     "apiVersion": {
       "deployment": "2015-01-01"
     },
     "uri": {
-      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/armdemo/master/nestedtemplatelayout/"
+      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/armdemo/master/nestedtemplatelayout/",
+      "optionalTemplateRelative" : "[concat('nested/optional_', parameters('optionalResource'),'.json')]"
     }
   },
   "resources": [
@@ -36,7 +48,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('uri').templateBase, 'nested/optional.json')]",
+          "uri": "[uri(variables('uri').templateBase, variables('optionalTemplateRelative'))]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
