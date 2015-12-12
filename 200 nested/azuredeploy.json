@@ -48,7 +48,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('uri').templateBase, variables('optionalTemplateRelative'))]",
+          "uri": "[uri(variables('uri').templateBase, variables('uri').optionalTemplateRelative)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
