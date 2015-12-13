@@ -94,5 +94,13 @@
       }
   ],
     "outputs": {
+      		"fixedOutput": {
+			"value": "[uri(variables('uri').templateBase, 'nested/memberresources1.json')]",
+			"type" : "string"
+		},
+		      		"dynamicOutput": {
+			"value": "[uri(variables('uri').templateBase, variables('uri').optionalTemplateRelative)]",
+			"type" : "string"
+		}
     }
 }
