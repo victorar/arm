@@ -4,8 +4,8 @@ Login-AzureRmAccount
 # Variables
 $ResourceGroupLocation = "West Europe"
 $ResourceGroupName = "MyResourceGroup"
-$TemplateFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/200%20nested/master/azuredeploy.json"
-$TemplateParameterFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/200%20nested/master/azuredeploy.parameters.json"
+$TemplateFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/100-single/master/azuredeploy.json"
+$TemplateParameterFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/100-single/master/azuredeploy.parameters.json"
 $DeploymentName = (Get-ChildItem $TemplateFile).BaseName + ((get-date).ToUniversalTime()).ToString('MMddyyyyHHmmss')
 
 # Create new Resource Group

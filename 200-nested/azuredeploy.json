@@ -19,7 +19,7 @@
       "deployment": "2015-01-01"
     },
     "uri": {
-      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200%20nested/",
+      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/",
       "optionalTemplateRelative": "[concat('nested/optional_', parameters('optionalResource'),'.json')]"
     }
   },
