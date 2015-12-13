@@ -12,19 +12,35 @@
       "metadata": {
         "description": "The endpoint namespace for storage"
       }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "myvirtualnetwork",
+      "metadata": {
+        "description": "The name of the virtual network"
+      }
     }
   },
   "variables": {
     "apiVersion": {
       "deployment": "2015-01-01",
-      "storage": "2015-06-15"
+      "storage": "2015-06-15",
+      "virtualNetworks": "2015-06-15"
     },
     "uri": {
-      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/100-network-storage/"
+      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/101-network-storage/"
     },
     "storage": {
       "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
       "type": "Standard_LRS"
+    },
+    "virtualNetworks": {
+      "name": "[parameters('virtualNetworkName')]",
+      "addressSpace": "10.0.0.0/16",
+      "subnet1Name": "identity",
+      "subnet1Address": "10.0.1.0/24",
+      "subnet2Name": "data",
+      "subnet2Address": "10.0.2.0/24"
     }
   },
   "resources": [
@@ -36,13 +52,35 @@
       "properties": {
         "accountType": "[variables('storage').type]"
       }
+    },
+    {
+      "name": "[variables('virtualNetworks').name]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "[variables('apiVersion').virtualNetworks]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('virtualNetworks').addressSpace]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('virtualNetworks').subnet1Name]",
+            "properties": { "addressPrefix": "[variables('virtualNetworks').subnet1Address]" }
+          },
+          {
+            "name": "[variables('virtualNetworks').subnet2Name]",
+            "properties": { "addressPrefix": "[variables('virtualNetworks').subnet2Address]" }
+          }
+        ]
+      }
     }
-
   ],
-    "outputs": {
-      		"templateBase": {
-			"value": "[uri(variables('uri').templateBase)]",
-			"type" : "string"
-		}
+  "outputs": {
+    "templateBase": {
+      "value": "[uri(variables('uri').templateBase)]",
+      "type": "string"
     }
+  }
 }
