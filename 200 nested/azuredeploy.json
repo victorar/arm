@@ -35,7 +35,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "apiVersion": {
+          "optionalResource": {
             "value": "[parameters('optionalResource')]"
           }
         }
@@ -52,7 +52,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "apiVersion": {
+          "optionalResource": {
             "value": "[parameters('optionalResource')]"
           }
         }
@@ -69,7 +69,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "apiVersion": {
+          "optionalResource": {
             "value": "[parameters('optionalResource')]"
           }
         }
@@ -86,7 +86,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "apiVersion": {
+          "optionalResource": {
             "value": "[parameters('optionalResource')]"
             }
           }
