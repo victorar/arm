@@ -12,7 +12,7 @@
   ],
   "outputs": {
 		"exampleOutput": {
-			"value": "[parameters('apiVersion').deployment]",
+			"value": "[parameters('apiVersion')]",
 			"type" : "string"
 		}
   }
