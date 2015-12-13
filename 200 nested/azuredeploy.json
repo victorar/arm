@@ -36,7 +36,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[variables('apiVersion')]"
+            "value": "[variables('apiVersion').deployment]"
           }
         }
       }
@@ -53,7 +53,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[parameters('optionalResource')]"
+            "value": "[variables('apiVersion').deployment]"
           }
         }
       }
@@ -70,7 +70,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[parameters('optionalResource')]"
+            "value": "[variables('apiVersion').deployment]"
           }
         }
       }
@@ -87,7 +87,7 @@
         },
         "parameters": {
           "apiVersion": {
-            "value": "[parameters('optionalResource')]"
+            "value": "[variables('apiVersion').deployment]"
             }
           }
         }
