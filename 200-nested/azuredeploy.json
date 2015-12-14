@@ -15,23 +15,26 @@
     }
   },
   "variables": {
-    "apiVersion": {
-      "deployment": "2015-01-01"
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/",
+      "shared": "nested/sharedresources.json",
+      "optional": "[concat('nested/optional_', parameters('optionalResource'),'.json')]",
+      "membertype1": "nested/membertype1.json",
+      "membertype2": "nested/membertype2.json"
     },
-    "uri": {
-      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/",
-      "optionalTemplateRelative": "[concat('nested/optional_', parameters('optionalResource'),'.json')]"
+    "apiVersion": {
+      "resources": { "deployments": "2015-01-01" }
     }
   },
   "resources": [
     {
-      "name": "sharedresources",
+      "name": "shared",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('uri').templateBase, 'nested/sharedresources.json')]",
+          "uri": "[uri(variables('template').base, variables('template').shared)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -44,11 +47,11 @@
     {
       "name": "optional",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('uri').templateBase, variables('uri').optionalTemplateRelative)]",
+          "uri": "[uri(variables('template').base, variables('template').optional)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -59,13 +62,13 @@
       }
     },
     {
-      "name": "memberresources1",
+      "name": "membertype1",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('uri').templateBase, 'nested/memberresources1.json')]",
+          "uri": "[uri(variables('template').base, variables('template').membertype1)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -75,32 +78,28 @@
         }
       }
     },
-        {
-      "name": "memberresources2",
+    {
+      "name": "membertype2",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployment]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('uri').templateBase, 'nested/memberresources1.json')]",
+          "uri": "[uri(variables('template').base, variables('template').membertype2)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "optionalResource": {
             "value": "[parameters('optionalResource')]"
-            }
           }
         }
       }
-  ],
-    "outputs": {
-      		"fixedOutput": {
-			"value": "[uri(variables('uri').templateBase, 'nested/memberresources1.json')]",
-			"type" : "string"
-		},
-		      		"dynamicOutput": {
-			"value": "[uri(variables('uri').templateBase, variables('uri').optionalTemplateRelative)]",
-			"type" : "string"
-		}
     }
+  ],
+  "outputs": {
+    "repositoryUri": {
+      "value": "uri(variables('template').base)]",
+      "type": "string"
+    }
+  }
 }
