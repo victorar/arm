@@ -48,6 +48,7 @@
       "name": "optional",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployment]",
+      "dependsOn": "[concat('Microsoft.Resources/deployments/', 'shared'))]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
