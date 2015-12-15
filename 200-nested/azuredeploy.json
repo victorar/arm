@@ -68,7 +68,7 @@
       "name": "membertype1",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
-            "dependsOn": [
+      "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'optional')]"
       ],
       "properties": {
@@ -88,7 +88,7 @@
       "name": "membertype2",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
-            "dependsOn": [
+      "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'membertype1')]"
       ],
       "properties": {
