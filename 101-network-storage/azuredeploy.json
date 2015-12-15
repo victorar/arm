@@ -23,55 +23,59 @@
   },
   "variables": {
     "apiVersion": {
-      "deployment": "2015-01-01",
-      "storage": "2015-06-15",
-      "virtualNetworks": "2015-06-15"
+      "resources": { "deployments": "2015-01-01" },
+      "storage": { "storageAccounts": "2015-06-15" },
+      "network": { "virtualNetworks": "2015-06-15" }
     },
-    "uri": {
-      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/101-network-storage/"
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/101-network-storage/"
     },
     "storage": {
-      "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
-      "type": "Standard_LRS"
+      "storageAccounts": {
+        "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
+        "type": "Standard_LRS"
+      }
     },
-    "virtualNetworks": {
-      "name": "[parameters('virtualNetworkName')]",
-      "addressSpace": "10.0.0.0/16",
-      "subnet1Name": "identity",
-      "subnet1Address": "10.0.1.0/24",
-      "subnet2Name": "data",
-      "subnet2Address": "10.0.2.0/24"
+    "network": {
+      "virtualNetworks": {
+        "name": "[parameters('virtualNetworkName')]",
+        "addressSpace": "10.0.0.0/16",
+        "subnet1Name": "identity",
+        "subnet1Address": "10.0.1.0/24",
+        "subnet2Name": "data",
+        "subnet2Address": "10.0.2.0/24"
+      }
     }
   },
   "resources": [
     {
-      "name": "[variables('storage').name]",
+      "name": "[variables('storage').storageAccounts.name]",
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "[variables('apiVersion').storage]",
+      "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "accountType": "[variables('storage').type]"
+        "accountType": "[variables('storage').storageAccounts.type]"
       }
     },
     {
-      "name": "[variables('virtualNetworks').name]",
+      "name": "[variables('network').virtualNetworks.name]",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "[variables('apiVersion').virtualNetworks]",
+      "apiVersion": "[variables('apiVersion').network.virtualNetworks]",
       "location": "[resourceGroup().location]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('virtualNetworks').addressSpace]"
+            "[variables('network').virtualNetworks.addressSpace]"
           ]
         },
         "subnets": [
           {
-            "name": "[variables('virtualNetworks').subnet1Name]",
-            "properties": { "addressPrefix": "[variables('virtualNetworks').subnet1Address]" }
+            "name": "[variables('network').virtualNetworks.subnet1Name]",
+            "properties": { "addressPrefix": "[variables('network').virtualNetworks.subnet1Address]" }
           },
           {
-            "name": "[variables('virtualNetworks').subnet2Name]",
-            "properties": { "addressPrefix": "[variables('virtualNetworks').subnet2Address]" }
+            "name": "[variables('network').virtualNetworks.subnet2Name]",
+            "properties": { "addressPrefix": "[variables('network').virtualNetworks.subnet2Address]" }
           }
         ]
       }
@@ -79,7 +83,7 @@
   ],
   "outputs": {
     "templateBase": {
-      "value": "[uri(variables('uri').templateBase)]",
+      "value": "[uri(variables('template').base)]",
       "type": "string"
     }
   }

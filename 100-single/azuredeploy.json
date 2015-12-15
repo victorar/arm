@@ -16,33 +16,35 @@
   },
   "variables": {
     "apiVersion": {
-      "deployment": "2015-01-01",
-      "storage": "2015-06-15"
+      "resources": { "deployments": "2015-01-01" },
+      "storage": { "storageAccounts": "2015-06-15" }
     },
-    "uri": {
-      "templateBase": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/100-single/"
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/100-single/"
     },
     "storage": {
-      "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
-      "type": "Standard_LRS"
+      "storageAccounts": {
+        "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
+        "type": "Standard_LRS"
+      }
     }
   },
   "resources": [
     {
-      "name": "[variables('storage').name]",
+      "name": "[variables('storage').storageAccounts.name]",
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "[variables('apiVersion').storage]",
+      "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "accountType": "[variables('storage').type]"
+        "accountType": "[variables('storage').storageAccounts.type]"
       }
     }
 
   ],
-    "outputs": {
-      		"templateBase": {
-			"value": "[uri(variables('uri').templateBase)]",
-			"type" : "string"
-		}
+  "outputs": {
+    "templateBase": {
+      "value": "[uri(variables('template').base)]",
+      "type": "string"
     }
+  }
 }
