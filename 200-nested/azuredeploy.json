@@ -30,7 +30,7 @@
     {
       "name": "shared",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').resources.deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -47,8 +47,10 @@
     {
       "name": "optional",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').resources.deployment]",
-      "dependsOn": "[concat('Microsoft.Resources/deployments/', 'shared'))]",
+      "apiVersion": "[variables('apiVersion').resources.deployments]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -65,7 +67,7 @@
     {
       "name": "membertype1",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').resources.deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -82,7 +84,7 @@
     {
       "name": "membertype2",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "[variables('apiVersion').resources.deployment]",
+      "apiVersion": "[variables('apiVersion').resources.deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
