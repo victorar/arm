@@ -68,6 +68,9 @@
       "name": "membertype1",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
+            "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'optional')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -85,6 +88,9 @@
       "name": "membertype2",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
+            "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'membertype1')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -101,7 +107,7 @@
   ],
   "outputs": {
     "repositoryUri": {
-      "value": "uri(variables('template').base)]",
+      "value": "[uri(variables('template').base)]",
       "type": "string"
     }
   }
