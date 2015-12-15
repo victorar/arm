@@ -1,0 +1,98 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageNamespace": {
+      "type": "string",
+      "defaultValue": "core.windows.net",
+      "allowedValues": [
+        "core.windows.net",
+        "local.domain.tld"
+      ],
+      "metadata": {
+        "description": "The endpoint namespace for storage"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "myvirtualnetwork",
+      "metadata": {
+        "description": "The name of the virtual network"
+      }
+    }
+  },
+  "variables": {
+    "apiVersion": {
+      "resources": { "deployments": "2015-01-01" },
+      "storage": { "storageAccounts": "2015-06-15" },
+      "network": { "virtualNetworks": "2015-06-15" },
+      "compute": { "virtualMachines": "2015-06-15" }
+    },
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/102-network-storage-vm/"
+    },
+    "storage": {
+      "storageAccounts": {
+        "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
+        "type": "Standard_LRS"
+      }
+    },
+    "network": {
+      "virtualNetworks": {
+        "name": "[parameters('virtualNetworkName')]",
+        "addressSpace": "10.0.0.0/16",
+        "subnet1Name": "identity",
+        "subnet1Address": "10.0.1.0/24",
+        "subnet2Name": "data",
+        "subnet2Address": "10.0.2.0/24"
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "[variables('storage').storageAccounts.name]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accountType": "[variables('storage').storageAccounts.type]"
+      }
+    },
+    {
+      "name": "[variables('network').virtualNetworks.name]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "[variables('apiVersion').network.virtualNetworks]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('network').virtualNetworks.addressSpace]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('network').virtualNetworks.subnet1Name]",
+            "properties": { "addressPrefix": "[variables('network').virtualNetworks.subnet1Address]" }
+          },
+          {
+            "name": "[variables('network').virtualNetworks.subnet2Name]",
+            "properties": { "addressPrefix": "[variables('network').virtualNetworks.subnet2Address]" }
+          }
+        ]
+      }
+    },
+    {
+      "name": "vm",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "[variables('apiVersion').compute.virtualMachines]",
+      "location": "[resourceGroup().location]",
+      "properties": {}
+    }
+  ],
+  "outputs": {
+    "templateBase": {
+      "value": "[uri(variables('template').base)]",
+      "type": "string"
+    }
+  }
+}
