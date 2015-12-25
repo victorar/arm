@@ -16,7 +16,7 @@
   },
   "variables": {
     "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/",
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/201-shared-complex-objects/",
       "shared": "nested/sharedresources.json",
       "optional": "[concat('nested/optional_', parameters('optionalResource'),'.json')]",
       "membertype1": "nested/membertype1.json",
