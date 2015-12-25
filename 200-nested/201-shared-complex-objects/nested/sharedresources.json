@@ -8,8 +8,7 @@
   },
   "variables": {
     "apiVersion": {
-      "storage": { "storageAccounts": "[parameters('apiVersion').storage.storageAccounts]" },
-      "test": { "testValue": "2016-01-01" }
+      "storage": { "storageAccounts": "[parameters('apiVersion').storage.storageAccounts]" }
     }
   },
   "resources": [
