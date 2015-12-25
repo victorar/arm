@@ -39,8 +39,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "optionalResource": {
-            "value": "[variables('apiVersion').storage.storageAccounts]"
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
           }
         }
       }
