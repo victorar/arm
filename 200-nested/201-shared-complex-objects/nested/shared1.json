@@ -1,0 +1,52 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apiVersionResourcesDeployments": {
+      "type": "string"
+    },
+    "apiVersionStorageStorageAccounts": {
+      "type": "string"
+    },
+    "apiVersionNetworkVirtualNetworks": {
+      "type": "string"
+    },
+    "apiVersionNetworkNetworkInterfaces": {
+      "type": "string"
+    },
+    "apiVersionNetworkLoadBalancers": {
+      "type": "string"
+    },
+    "apiVersionNetworkPublicIPAddresses": {
+      "type": "string"
+    },
+    "apiVersionComputeVirtualMachines": {
+      "type": "string"
+    }
+  },
+  "variables": {
+        "apiVersion": {
+      "resources": { "deployments": "[parameters('apiVersionResourcesDeployments')]" },
+      "storage": { "storageAccounts": "[parameters('apiVersionStorageStorageAccounts')]" },
+      "network": {
+        "virtualNetworks": "[parameters('apiVersionNetworkVirtualNetworks')]",
+        "networkInterfaces": "[parameters('apiVersionNetworkNetworkInterfaces')]",
+        "loadBalancers": "[parameters('apiVersionNetworkPublicIPAddresses')]",
+        "publicIPAddresses": "[parameters('apiVersionStorageStorageAccounts')]"
+      },
+      "compute": { "virtualMachines": "[parameters('apiVersionComputeVirtualMachines')]" }
+    }
+  },
+  "resources": [
+  ],
+  "outputs": {
+    "apiVersionParameterString": {
+      "value": "[parameters('apiVersionStorageStorageAccounts')]",
+      "type": "object"
+    },
+    "apiVersionVariableString": {
+      "value": "[variables('apiVersion').storage.storageAccounts]",
+      "type": "string"
+    }
+  }
+}
