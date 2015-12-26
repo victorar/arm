@@ -16,7 +16,7 @@
   },
   "variables": {
     "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/",
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/200-template",
       "nested1": "sharedresources.json",
       "nested2": "[concat('optional_', parameters('optionalResource'),'.json')]",
       "nested3": "membertype1.json",
