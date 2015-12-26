@@ -1,0 +1,65 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": { },
+  "variables": {
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/202-shared/",
+      "nested1": "nested/shared.json",
+      "nested2": "nested/compute.json"
+    },
+    "apiVersion": {
+      "resources": { "deployments": "2015-01-01" },
+      "storage": { "storageAccounts": "2015-06-15" },
+      "network": {
+        "virtualNetworks": "2015-06-15",
+        "networkInterfaces": "2015-06-15",
+        "loadBalancers": "2015-06-15",
+        "publicIPAddresses": "2015-06-15"
+      },
+      "compute": { "virtualMachines": "2015-06-15" }
+    }
+  },
+  "resources": [
+    {
+      "name": "[variables('template').nested1]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion').resources.deployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(variables('template').base, variables('template').nested1)]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('template').nested2]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('apiVersion').resources.deployments]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(variables('template').base, variables('template').nested2)]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "repositoryUri": {
+      "value": "[uri(variables('template').base)]",
+      "type": "string"
+    }
+  }
+}
