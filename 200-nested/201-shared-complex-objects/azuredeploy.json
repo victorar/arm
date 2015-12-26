@@ -5,8 +5,8 @@
   "variables": {
     "template": {
       "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/201-shared-complex-objects/",
-      "nested1": "nested/shared1.json",
-      "nested2": "nested/shared2.json"
+      "nested1": "shared1.json",
+      "nested2": "shared2.json"
     },
     "apiVersion": {
       "resources": { "deployments": "2015-01-01" },
@@ -28,7 +28,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('template').base, variables('template').nested1)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested1)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -63,7 +63,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('template').base, variables('template').nested2)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested2)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

@@ -17,10 +17,10 @@
   "variables": {
     "template": {
       "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/",
-      "shared": "nested/sharedresources.json",
-      "optional": "[concat('nested/optional_', parameters('optionalResource'),'.json')]",
-      "membertype1": "nested/membertype1.json",
-      "membertype2": "nested/membertype2.json"
+      "nested1": "sharedresources.json",
+      "nested2": "[concat('optional_', parameters('optionalResource'),'.json')]",
+      "nested3": "membertype1.json",
+      "nested4": "membertype2.json"
     },
     "apiVersion": {
       "resources": { "deployments": "2015-01-01" }
@@ -28,13 +28,13 @@
   },
   "resources": [
     {
-      "name": "shared",
+      "name": "[variables('template').nested1]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('template').base, variables('template').shared)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested1)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -45,16 +45,16 @@
       }
     },
     {
-      "name": "optional",
+      "name": "[variables('template').nested2]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', variables('template').nested1)]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('template').base, variables('template').optional)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested2)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -65,16 +65,16 @@
       }
     },
     {
-      "name": "membertype1",
+      "name": "[variables('template').nested3]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'optional')]"
+        "[concat('Microsoft.Resources/deployments/', variables('template').nested2)]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('template').base, variables('template').membertype1)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested3)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -85,16 +85,16 @@
       }
     },
     {
-      "name": "membertype2",
+      "name": "[variables('template').nested4]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'membertype1')]"
+        "[concat('Microsoft.Resources/deployments/', variables('template').nested3)]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(variables('template').base, variables('template').membertype2)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested4)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
