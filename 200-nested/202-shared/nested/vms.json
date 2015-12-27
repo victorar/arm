@@ -12,18 +12,19 @@
     }
   },
   "resources": [
-    {
-      "name": "[concat(uniquestring(resourceGroup().id),'storage')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
-      "properties": {"accountType": "Standard_LRS"}
-    }
   ],
   "outputs": {
+    "apiVersionParameterObject": {
+      "value": "[parameters('apiVersion')]",
+      "type": "object"
+    },
     "apiVersionVariableObject": {
       "value": "[variables('apiVersion')]",
       "type": "object"
+    },
+    "apiVersionVariableString": {
+      "value": "[variables('apiVersion').storage.storageAccounts]",
+      "type": "string"
     }
   }
 }
