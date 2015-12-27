@@ -17,89 +17,97 @@
   "variables": {
     "template": {
       "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/200-nested/200-template",
-      "nested1": "sharedresources.json",
-      "nested2": "[concat('optional_', parameters('optionalResource'),'.json')]",
-      "nested3": "membertype1.json",
-      "nested4": "membertype2.json"
+      "shared": "shared.json",
+      "optional": "[concat('optional_', parameters('optionalResource'),'.json')]",
+      "vms": "vms.json",
+      "scripts": "scripts.json"
     },
     "apiVersion": {
-      "resources": { "deployments": "2015-01-01" }
+      "resources": { "deployments": "2015-01-01" },
+      "storage": { "storageAccounts": "2015-06-15" },
+      "network": {
+        "virtualNetworks": "2015-06-15",
+        "networkInterfaces": "2015-06-15",
+        "loadBalancers": "2015-06-15",
+        "publicIPAddresses": "2015-06-15"
+      },
+      "compute": { "virtualMachines": "2015-06-15" }
     }
   },
   "resources": [
     {
-      "name": "[variables('template').nested1]",
+      "name": "[variables('template').shared]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested1)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').shared)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "optionalResource": {
-            "value": "[parameters('optionalResource')]"
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
           }
         }
       }
     },
     {
-      "name": "[variables('template').nested2]",
+      "name": "[variables('template').optional]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', variables('template').nested1)]"
+        "[concat('Microsoft.Resources/deployments/', variables('template').shared)]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested2)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').optional)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "optionalResource": {
-            "value": "[parameters('optionalResource')]"
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
           }
         }
       }
     },
     {
-      "name": "[variables('template').nested3]",
+      "name": "[variables('template').vms]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', variables('template').nested2)]"
+        "[concat('Microsoft.Resources/deployments/', variables('template').shared)]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested3)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').vms)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "optionalResource": {
-            "value": "[parameters('optionalResource')]"
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
           }
         }
       }
     },
     {
-      "name": "[variables('template').nested4]",
+      "name": "[variables('template').scripts]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('apiVersion').resources.deployments]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', variables('template').nested3)]"
+        "[concat('Microsoft.Resources/deployments/', variables('template').vms)]"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested4)]",
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').scripts)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "optionalResource": {
-            "value": "[parameters('optionalResource')]"
+          "apiVersion": {
+            "value": "[variables('apiVersion')]"
           }
         }
       }
