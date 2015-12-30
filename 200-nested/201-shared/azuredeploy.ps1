@@ -4,8 +4,11 @@ Login-AzureRmAccount
 # Variables
 $ResourceGroupLocation = "West Europe"
 $ResourceGroupName = "MyResourceGroup"
-$TemplateFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/200-nested/master/azuredeploy.json"
-$TemplateParameterFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/200-nested/master/azuredeploy.parameters.json"
+$RepositoryPath = "https://raw.githubusercontent.com/marcvaneijk/ARM-Templates/master/200-nested/201-shared-complex-objects/"
+
+#Variables, constructing
+$TemplateFile = $RepositoryPath + "azuredeploy.json"
+$TemplateParameterFile = $RepositoryPath + "azuredeploy.parameters.json"
 $DeploymentName = (Get-ChildItem $TemplateFile).BaseName + ((get-date).ToUniversalTime()).ToString('MMddyyyyHHmmss')
 
 # Create new Resource Group

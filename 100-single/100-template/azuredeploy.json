@@ -29,21 +29,10 @@
       }
     }
   },
-  "resources": [
-    {
-      "name": "[variables('storage').storageAccounts.name]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[variables('storage').storageAccounts.type]"
-      }
-    }
-
-  ],
+  "resources": [ ],
   "outputs": {
     "templateBase": {
-      "value": "[uri(variables('template').base)]",
+      "value": "[variables('template').base]",
       "type": "string"
     }
   }
