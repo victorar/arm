@@ -28,7 +28,7 @@
       "network": { "virtualNetworks": "2015-06-15" }
     },
     "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/101-network-storage/"
+      "base": "https://raw.githubusercontent.com/marcvaneijk/ARM-Templates/master/100-single/101-network-storage/"
     },
     "storage": {
       "storageAccounts": {

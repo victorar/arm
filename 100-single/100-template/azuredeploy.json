@@ -20,7 +20,7 @@
       "storage": { "storageAccounts": "2015-06-15" }
     },
     "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/foundation/master/100-single/"
+      "base": "https://raw.githubusercontent.com/marcvaneijk/ARM-Templates/master/100-single/100-template/"
     },
     "storage": {
       "storageAccounts": {
