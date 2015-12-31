@@ -1,0 +1,39 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageNamespace": {
+      "type": "string",
+      "defaultValue": "core.windows.net",
+      "allowedValues": [
+        "core.windows.net",
+        "local.domain.tld"
+      ],
+      "metadata": {
+        "description": "The endpoint namespace for storage"
+      }
+    }
+  },
+  "variables": {
+    "apiVersion": {
+      "resources": { "deployments": "2015-01-01" },
+      "storage": { "storageAccounts": "2015-06-15" }
+    },
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/amr/master/000-foundation/source/"
+    },
+    "storage": {
+      "storageAccounts": {
+        "name": "[replace(replace(tolower(concat('storage', uniquestring(resourceGroup().id))), '-',''),'.','')]",
+        "type": "Standard_LRS"
+      }
+    }
+  },
+  "resources": [ ],
+  "outputs": {
+    "templateBase": {
+      "value": "[variables('template').base]",
+      "type": "string"
+    }
+  }
+}
