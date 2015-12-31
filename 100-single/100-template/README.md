@@ -1,36 +1,38 @@
-# Template for single template deployment
+# [Solution name]
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmarcvaneijk%2FARM-Templates%2Fmaster%2F100-single%2F100-template%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmarcvaneijk%2Farm%2Fmaster%2F100-single%2F100-template%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/></a>
 
-This template is used as a base for creating single template deployments.
+This template deploys a [solution name]. The [solution name] is a [description]
 
-`Tags: 100, Single, Template`
+`Tags: [Tag1, Tag2, Tag3]`
 
-## Deployed resources
+## Solution diagram and deployed resources
 
-This template does not deploy any resources.
+This diagram displays an overview of the solution
 
-####Parameters
-This is the account that will contain your runbook and credentials. If you want to deploy to an existing account, make sure that the Resource Group, region, tags, and SKU in the template are all the same as your existing account, otherwise the properties will be overwritten. 
-+ **Virtual network**: Consists of three subnets
-+ **Load balancers**: The web servers
-+ **Network Security Groups**: Each subnet is configured with
-+ **Public IP Address**: The load balancer on the web tier is. The runbook provides an example of how you can authenticate to Azure and use Azure cmdlets in a runbook. It uses an Azure AD organizational ID to connect to Azure. It then prints out the first 10 VMs in your account.
+![alt text](../master/images/diagram.png "diagram")
 
-####Variables
-The runbook provides an example of how you can authenticate to Azure and use Azure cmdlets in a runbook. It uses an Azure AD organizational ID to connect to Azure. It then prints out the first 10 VMs in your account.
-+ **Storage Accounts**: All tiers use the same storage account
+The following resources are deployed as part of the solution
 
-####Output
-The credential should contain the username and password of the Azure AD organizational ID to connect to Azure.  To learn about how to create this user, see [Get set up to automate Azure]("http://aka.ms/getsetuptoautomate") and check out this blog post [Authenticating to Azure using Active Directory]("http://azure.microsoft.com/blog/2014/08/27/azure-automation-authenticating-to-azure-using-azure-active-directory/").  
-+ **Web tier**: Each web server in this tier
-+ **App tier**: The application tier
-+ **Database tier**: For high availability the
+####[Resource provider 1]
+[Description Resource Provider 1]
++ **[Resource type 1A]**: [Description Resource type 1A]
++ **[Resource type 1B]**: [Description Resource type 1B]
++ **[Resource type 1C]**: [Description Resource type 1C]
+
+####[Resource provider 2]
+[Description Resource Provider 2]
++ **[Resource type 2A]**: [Description Resource type 2A]
+
+####[Resource provider 3]
+[Description Resource Provider 3]
++ **[Resource type 3A]**: [Description Resource type 3A]
++ **[Resource type 3B]**: [Description Resource type 3B]
 
 ## Prerequisites
 
-This template does not have any prerequisites
+[Decscription of the prerequistes for the deployment]
 
 ## Deployment steps
 You can either click the "deploy to Azure" button at the beginning of this document or deploy the solution from PowerShell with the following PowerShell script.
@@ -42,7 +44,7 @@ Login-AzureRmAccount
 # Variables, replace these with your own values
 $ResourceGroupLocation = "West Europe"
 $ResourceGroupName = "MyResourceGroup"
-$RepositoryPath = "https://raw.githubusercontent.com/marcvaneijk/ARM-Templates/master/100-single/100-template/"
+$RepositoryPath = "https://raw.githubusercontent.com/marcvaneijk/arm/master/100-single/100-template/"
 
 # Variables, used for constructing the required values
 $TemplateFile = $RepositoryPath + "azuredeploy.json"
@@ -56,3 +58,11 @@ New-AzureRmResourceGroup -Name $ResourceGroupName -Location $ResourceGroupLocati
 New-AzureRmResourceGroupDeployment -Name $DeploymentName -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFile -TemplateParameterFile $TemplateParameterFile
 ```
 
+## Usage
+#### Connect
+[How to connect to the solution]
+#### Management
+[How to manage the solution]
+
+## Notes
+[Solution notes]
