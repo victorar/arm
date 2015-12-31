@@ -1,11 +1,14 @@
 # Login to your subscription
 Login-AzureRmAccount
 
-# Variables
+# Variables, replace these with your own values
 $ResourceGroupLocation = "West Europe"
 $ResourceGroupName = "MyResourceGroup"
-$TemplateFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/100-single/master/azuredeploy.json"
-$TemplateParameterFile = "https://raw.githubusercontent.com/marcvaneijk/foundation/100-single/master/azuredeploy.parameters.json"
+$RepositoryPath = "https://raw.githubusercontent.com/marcvaneijk/arm/master/000-foundation/000-template/"
+
+# Variables, used for constructing the required values
+$TemplateFile = $RepositoryPath + "azuredeploy.json"
+$TemplateParameterFile = $RepositoryPath + "azuredeploy.parameters.json"
 $DeploymentName = (Get-ChildItem $TemplateFile).BaseName + ((get-date).ToUniversalTime()).ToString('MMddyyyyHHmmss')
 
 # Create new Resource Group

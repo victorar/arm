@@ -20,7 +20,7 @@
       "storage": { "storageAccounts": "2015-06-15" }
     },
     "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/amr/master/000-foundation/source/"
+      "base": "https://raw.githubusercontent.com/marcvaneijk/amr/master/000-foundation/000-template/"
     },
     "storage": {
       "storageAccounts": {
