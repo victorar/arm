@@ -11,7 +11,7 @@ This template deploys a [solution name]. The [solution name] is a [description]
 
 This diagram displays an overview of the solution
 
-![alt text](../master/images/diagram.png "diagram")
+![alt text](images/diagram.png "diagram")
 
 The following resources are deployed as part of the solution
 
