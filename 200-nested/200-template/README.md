@@ -13,6 +13,7 @@ This diagram displays an overview of the solution
 
 ![alt text](images/diagram.png "diagram")
 
+This deployment uses nested templates.
 The following resources are deployed as part of the solution
 
 ####[Resource provider 1]
