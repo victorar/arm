@@ -16,7 +16,7 @@
   },
   "variables": {
     "template": {
-      "base": https://raw.githubusercontent.com/marcvaneijk/arm/master/200-nested/201-shared/",
+      "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/200-nested/201-shared/",
       "shared": "shared.json",
       "optional": "[concat('optional_', parameters('optionalResource'),'.json')]",
       "vms": "vms.json",
