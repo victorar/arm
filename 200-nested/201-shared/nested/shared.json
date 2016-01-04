@@ -8,21 +8,22 @@
   },
   "variables": {
     "apiVersion": {
-      "storage": { "storageAccounts": "[parameters('apiVersion').storage.storageAccounts]" }
+      "storage": { "storageAccounts": "[parameters('apiVersion').storage.storageAccounts]" },
+      "network": { "virtualNetworks": "[parameters('apiVersion').network.virtualNetworks]" }
     }
   },
   "resources": [
     {
       "name": "[concat(uniquestring(resourceGroup().id),'storage')]",
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
       "location": "[resourceGroup().location]",
       "properties": { "accountType": "Standard_LRS" }
     },
     {
       "name": "vnet",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('apiVersion').network.virtualNetworks]",
       "location": "[resourceGroup().location]",
       "properties": {
         "addressSpace": { "addressPrefixes": [ "10.0.0.0/16" ] },
