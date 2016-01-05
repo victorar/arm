@@ -7,9 +7,6 @@
     }
   },
   "variables": {
-    "apiVersion": {
-      "storage": { "storageAccounts": "[parameters('apiVersion').storage.storageAccounts]" }
-    }
   },
   "resources": [
   ],
@@ -18,12 +15,8 @@
       "value": "[parameters('apiVersion')]",
       "type": "object"
     },
-    "apiVersionVariableObject": {
-      "value": "[variables('apiVersion')]",
-      "type": "object"
-    },
-    "apiVersionVariableString": {
-      "value": "[variables('apiVersion').storage.storageAccounts]",
+    "apiVersionParameterString": {
+      "value": "[parameters('apiVersion').storage.storageAccounts]",
       "type": "string"
     }
   }
