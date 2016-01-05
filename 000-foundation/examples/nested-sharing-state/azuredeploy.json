@@ -4,7 +4,7 @@
   "parameters": { },
   "variables": {
     "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/000-foundation/examples/201-shared-complex-objects/",
+      "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/000-foundation/examples/nested-sharing-state/",
       "nested1": "shared1.json",
       "nested2": "shared2.json"
     },
@@ -75,9 +75,5 @@
     }
   ],
   "outputs": {
-    "repositoryUri": {
-      "value": "[uri(variables('template').base)]",
-      "type": "string"
-    }
   }
 }
