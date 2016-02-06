@@ -6,9 +6,45 @@
       "type": "string",
       "defaultValue": "notConfigured",
       "allowedValues": [ "notConfigured" ],
-      "minLength": 1,
-      "maxLength": 24,
       "metadata": { "description": "This parameter is used for all expression that have not been configured yet." }
+    },
+    "String": {
+      "type": "string",
+      "defaultValue": "String",
+      "minLength": 1,
+      "maxLength": 24
+    },
+    "Int": {
+      "type": "int",
+      "defaultValue": 10,
+      "minValue": 1,
+      "maxValue": 1000
+    },
+    "Array": {
+      "type": "array",
+      "defaultValue": [ "this", "is", "an", "array" ]
+    },
+    "Boolean": {
+      "type": "bool",
+      "defaultValue": true,
+      "allowedValues": [ true, false ]
+    },
+    "Object": {
+      "type": "object",
+      "defaultValue": {
+        "node1": {
+          "sub1a": "value1a",
+          "sub1b": "value1b"
+        },
+        "node2": {
+          "sub2a": "value2a",
+          "sub2b": "value2b"
+        }
+      }
+    },
+    "SecureString": {
+      "type": "securestring",
+      "defaultValue": "PassW0rd"
     }
   },
   "variables": {
@@ -23,23 +59,22 @@
       "sub": "[parameters('notConfigured')]"
     },
     "string": {
-      "base64": "[parameters('notConfigured')]",
-      "concat": "[parameters('notConfigured')]",
-      "padLeft": "[parameters('notConfigured')]",
-      "replace": "[parameters('notConfigured')]",
-      "split": "[parameters('notConfigured')]",
-      "string": "[parameters('notConfigured')]",
-      "subString": "[parameters('notConfigured')]",
-      "toLower": "[parameters('notConfigured')]",
-      "toUpper": "[parameters('notConfigured')]",
-      "trim": "[parameters('notConfigured')]",
-      "uniqueString": "[parameters('notConfigured')]",
-      "uri": "[parameters('notConfigured')]"
+      "base64": "[base64(parameters('string'))]",
+      "concat": "[concat(parameters('string'),'fixedtext',parameters('int'))]",
+      "padLeft": "[padleft('7',3,'0')]",
+      "replace": "[replace('99d82f4b-b738-4f4c-9ba0-91beefd7998c','-','')]",
+      "split": "[split('The quick brown fox jumps over the lazy dog.',' ')]",
+      "string": "[parameters('Int')]",
+      "subString": "[substring('foobar', 3, 1)]",
+      "toLower": "[toLower(parameters('string'))]",
+      "toUpper": "[toUpper(parameters('string'))]",
+      "trim": "[trim(parameters('string'))]",
+      "uniqueString": "[uniqueString(parameters('string'))]",
+      "uri": "[uri('http://contoso.com/resources/azuredeploy.json','mytemplate.json')]"
     },
     "array": {
-      "concat": "[parameters('notConfigured')]",
-      "length": "[parameters('notConfigured')]",
-      "split": "[parameters('notConfigured')]"
+      "concat": "[concat(parameters('array'),parameters('array'))]",
+      "length": "[length(parameters('array'))]"
     },
     "deployment": {
       "deployment": "[parameters('notConfigured')]",
@@ -107,7 +142,7 @@
     },
     "stringSplit": {
       "type": "string",
-      "value": "[variables('string').split]"
+      "value": "[variables('string').split[4]]"
     },
     "stringString": {
       "type": "string",
@@ -138,16 +173,12 @@
       "value": "[variables('string').uri]"
     },
     "arrayConcat": {
-      "type": "string",
+      "type": "array",
       "value": "[variables('array').concat]"
     },
     "arrayLength": {
       "type": "string",
       "value": "[variables('array').length]"
-    },
-    "arraySplit": {
-      "type": "string",
-      "value": "[variables('array').split]"
     },
     "deploymentDeployment": {
       "type": "string",
