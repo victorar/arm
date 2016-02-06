@@ -1,0 +1,189 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "notConfigured": {
+      "type": "string",
+      "defaultValue": "notConfigured",
+      "allowedValues": [ "notConfigured" ],
+      "minLength": 1,
+      "maxLength": 24,
+      "metadata": { "description": "This parameter is used for all expression that have not been configured yet." }
+    }
+  },
+  "variables": {
+    "numeric": {
+      "add": "[parameters('notConfigured')]",
+      "copyIndex": "[parameters('notConfigured')]",
+      "div": "[parameters('notConfigured')]",
+      "int": "[parameters('notConfigured')]",
+      "length": "[parameters('notConfigured')]",
+      "mod": "[parameters('notConfigured')]",
+      "mul": "[parameters('notConfigured')]",
+      "sub": "[parameters('notConfigured')]"
+    },
+    "string": {
+      "base64": "[parameters('notConfigured')]",
+      "concat": "[parameters('notConfigured')]",
+      "padLeft": "[parameters('notConfigured')]",
+      "replace": "[parameters('notConfigured')]",
+      "split": "[parameters('notConfigured')]",
+      "string": "[parameters('notConfigured')]",
+      "subString": "[parameters('notConfigured')]",
+      "toLower": "[parameters('notConfigured')]",
+      "toUpper": "[parameters('notConfigured')]",
+      "trim": "[parameters('notConfigured')]",
+      "uniqueString": "[parameters('notConfigured')]",
+      "uri": "[parameters('notConfigured')]"
+    },
+    "array": {
+      "concat": "[parameters('notConfigured')]",
+      "length": "[parameters('notConfigured')]",
+      "split": "[parameters('notConfigured')]"
+    },
+    "deployment": {
+      "deployment": "[parameters('notConfigured')]",
+      "parameters": "[parameters('notConfigured')]",
+      "variables": "[parameters('notConfigured')]"
+    },
+    "resource": {
+      "listKeys": "[parameters('notConfigured')]",
+      "providers": "[parameters('notConfigured')]",
+      "reference": "[parameters('notConfigured')]",
+      "resourceGroup": "[parameters('notConfigured')]",
+      "resourceId": "[parameters('notConfigured')]",
+      "subscription": "[parameters('notConfigured')]"
+    }
+  },
+  "resources": [ ],
+  "outputs": {
+    "numericAdd": {
+      "type": "string",
+      "value": "[variables('numeric').add]"
+    },
+    "numericCopyIndex": {
+      "type": "string",
+      "value": "[variables('numeric').copyIndex]"
+    },
+    "numericDiv": {
+      "type": "string",
+      "value": "[variables('numeric').div]"
+    },
+    "numericInt": {
+      "type": "string",
+      "value": "[variables('numeric').int]"
+    },
+    "numericLength": {
+      "type": "string",
+      "value": "[variables('numeric').length]"
+    },
+    "numericMod": {
+      "type": "string",
+      "value": "[variables('numeric').mod]"
+    },
+    "numericMul": {
+      "type": "string",
+      "value": "[variables('numeric').mul]"
+    },
+    "numericSub": {
+      "type": "string",
+      "value": "[variables('numeric').sub]"
+    },
+    "stringBase64": {
+      "type": "string",
+      "value": "[variables('string').base64]"
+    },
+    "stringConcat": {
+      "type": "string",
+      "value": "[variables('string').concat]"
+    },
+    "stringPadLeft": {
+      "type": "string",
+      "value": "[variables('string').padLeft]"
+    },
+    "stringReplace": {
+      "type": "string",
+      "value": "[variables('string').replace]"
+    },
+    "stringSplit": {
+      "type": "string",
+      "value": "[variables('string').split]"
+    },
+    "stringString": {
+      "type": "string",
+      "value": "[variables('string').string]"
+    },
+    "stringSubString": {
+      "type": "string",
+      "value": "[variables('string').subString]"
+    },
+    "stringToLower": {
+      "type": "string",
+      "value": "[variables('string').toLower]"
+    },
+    "stringToUpper": {
+      "type": "string",
+      "value": "[variables('string').toUpper]"
+    },
+    "stringTrim": {
+      "type": "string",
+      "value": "[variables('string').trim]"
+    },
+    "stringUniqueString": {
+      "type": "string",
+      "value": "[variables('string').uniqueString]"
+    },
+    "stringUri": {
+      "type": "string",
+      "value": "[variables('string').uri]"
+    },
+    "arrayConcat": {
+      "type": "string",
+      "value": "[variables('array').concat]"
+    },
+    "arrayLength": {
+      "type": "string",
+      "value": "[variables('array').length]"
+    },
+    "arraySplit": {
+      "type": "string",
+      "value": "[variables('array').split]"
+    },
+    "deploymentDeployment": {
+      "type": "string",
+      "value": "[variables('deployment').deployment]"
+    },
+    "deploymentParameters": {
+      "type": "string",
+      "value": "[variables('deployment').parameters]"
+    },
+    "deploymentVariables": {
+      "type": "string",
+      "value": "[variables('deployment').variables]"
+    },
+    "resourceListKeys": {
+      "type": "string",
+      "value": "[variables('resource').listKeys]"
+    },
+    "resourceProviders": {
+      "type": "string",
+      "value": "[variables('resource').providers]"
+    },
+    "resourceReference": {
+      "type": "string",
+      "value": "[variables('resource').reference]"
+    },
+    "resourceResourceGroup": {
+      "type": "string",
+      "value": "[variables('resource').resourceGroup]"
+    },
+    "resourceResourceId": {
+      "type": "string",
+      "value": "[variables('resource').resourceId]"
+    },
+    "resourceSubscription": {
+      "type": "string",
+      "value": "[variables('resource').subscription]"
+    }
+  }
+}
