@@ -48,19 +48,29 @@
     }
   },
   "variables": {
-    "add": "[parameters('skipValidation')]",
+    "add": "[add(parameters('Int1'),parameters('Int2'))]",
     "copyIndex": "[parameters('skipValidation')]",
-    "div": "[parameters('skipValidation')]",
+    "div": "[div(parameters('Int1'),parameters('Int2'))]",
     "int": "[parameters('skipValidation')]",
-    "length": "[parameters('skipValidation')]",
-    "mod": "[parameters('skipValidation')]",
-    "mul": "[parameters('skipValidation')]",
-    "sub": "[parameters('skipValidation')]"
+    "mod": "[mod(parameters('Int1'),parameters('Int2'))]",
+    "mul": "[mul(parameters('Int1'),parameters('Int2'))]",
+    "sub": "[sub(parameters('Int1'),parameters('Int2'))]"
   },
-  "resources": [ ],
+  "resources": [
+    {
+      "name": "[concat('resourcename', copyIndex())]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "copyname",
+        "count": 2 },
+      "properties": {"accountType": "Standard_LRS"}
+    }
+  ],
   "outputs": {
     "add": {
-      "type": "string",
+      "type": "int",
       "value": "[variables('add')]"
     },
     "copyIndex": {
@@ -68,27 +78,23 @@
       "value": "[variables('copyIndex')]"
     },
     "div": {
-      "type": "string",
+      "type": "int",
       "value": "[variables('div')]"
     },
     "int": {
-      "type": "string",
+      "type": "int",
       "value": "[variables('int')]"
     },
-    "length": {
-      "type": "string",
-      "value": "[variables('length')]"
-    },
     "mod": {
-      "type": "string",
+      "type": "int",
       "value": "[variables('mod')]"
     },
     "mul": {
-      "type": "string",
+      "type": "int",
       "value": "[variables('mul')]"
     },
     "sub": {
-      "type": "string",
+      "type": "int",
       "value": "[variables('sub')]"
     }
   }
