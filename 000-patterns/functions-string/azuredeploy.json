@@ -2,49 +2,19 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "notConfigured": {
+    "skipValidation": {
       "type": "string",
       "defaultValue": "skipValidation",
       "allowedValues": [ "skipValidation" ],
-      "metadata": { "description": "This parameter is used for all functions that have be skipped." }
+      "metadata": { "description": "This parameter is used for all functions that will skip validation." }
     },
     "String": {
       "type": "string",
-      "defaultValue": "String 3-Values  ",
-      "minLength": 1,
-      "maxLength": 24
+      "defaultValue": "String 3-Values  "
     },
     "Int": {
       "type": "int",
-      "defaultValue": 10,
-      "minValue": 1,
-      "maxValue": 1000
-    },
-    "Array": {
-      "type": "array",
-      "defaultValue": [ "this", "is", "an", "array" ]
-    },
-    "Boolean": {
-      "type": "bool",
-      "defaultValue": true,
-      "allowedValues": [ true, false ]
-    },
-    "Object": {
-      "type": "object",
-      "defaultValue": {
-        "node1": {
-          "sub1a": "value1a",
-          "sub1b": "value1b"
-        },
-        "node2": {
-          "sub2a": "value2a",
-          "sub2b": "value2b"
-        }
-      }
-    },
-    "SecureString": {
-      "type": "securestring",
-      "defaultValue": "PassW0rd"
+      "defaultValue": 10
     }
   },
   "variables": {
