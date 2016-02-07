@@ -2,219 +2,67 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "notConfigured": {
+    "skipValidation": {
       "type": "string",
-      "defaultValue": "notConfigured",
-      "allowedValues": [ "notConfigured" ],
-      "metadata": { "description": "This parameter is used for all expression that have not been configured yet." }
+      "defaultValue": "skipValidation",
+      "allowedValues": [ "skipValidation" ],
+      "metadata": { "description": "This parameter is used for all functions that will skip validation." }
     },
-    "String": {
+    "storageAccountName": {
       "type": "string",
-      "defaultValue": "String",
-      "minLength": 1,
-      "maxLength": 24
-    },
-    "Int": {
-      "type": "int",
-      "defaultValue": 10,
-      "minValue": 1,
-      "maxValue": 1000
-    },
-    "Array": {
-      "type": "array",
-      "defaultValue": [ "this", "is", "an", "array" ]
-    },
-    "Boolean": {
-      "type": "bool",
-      "defaultValue": true,
-      "allowedValues": [ true, false ]
-    },
-    "Object": {
-      "type": "object",
-      "defaultValue": {
-        "node1": {
-          "sub1a": "value1a",
-          "sub1b": "value1b"
-        },
-        "node2": {
-          "sub2a": "value2a",
-          "sub2b": "value2b"
-        }
-      }
-    },
-    "SecureString": {
-      "type": "securestring",
-      "defaultValue": "PassW0rd"
+      "defaultValue": "mvestorage123"
     }
   },
   "variables": {
-    "numeric": {
-      "add": "[parameters('notConfigured')]",
-      "copyIndex": "[parameters('notConfigured')]",
-      "div": "[parameters('notConfigured')]",
-      "int": "[parameters('notConfigured')]",
-      "length": "[parameters('notConfigured')]",
-      "mod": "[parameters('notConfigured')]",
-      "mul": "[parameters('notConfigured')]",
-      "sub": "[parameters('notConfigured')]"
+    "listKeys": "[parameters('skipValidation')]",
+    "providers": {
+      "nameSpace": "[providers('Microsoft.Network')]",
+      "type": "[providers('Microsoft.Network', 'virtualNetworks')]"
     },
-    "string": {
-      "base64": "[base64(parameters('string'))]",
-      "concat": "[concat(parameters('string'),'fixedtext',parameters('int'))]",
-      "padLeft": "[padleft('7',3,'0')]",
-      "replace": "[replace('99d82f4b-b738-4f4c-9ba0-91beefd7998c','-','')]",
-      "split": "[split('The quick brown fox jumps over the lazy dog.',' ')]",
-      "string": "[parameters('Int')]",
-      "subString": "[substring('foobar', 3, 1)]",
-      "toLower": "[toLower(parameters('string'))]",
-      "toUpper": "[toUpper(parameters('string'))]",
-      "trim": "[trim(parameters('string'))]",
-      "uniqueString": "[uniqueString(parameters('string'))]",
-      "uri": "[uri('http://contoso.com/resources/azuredeploy.json','mytemplate.json')]"
-    },
-    "array": {
-      "concat": "[concat(parameters('array'),parameters('array'))]",
-      "length": "[length(parameters('array'))]"
-    },
-    "deployment": {
-      "deployment": "[parameters('notConfigured')]",
-      "parameters": "[parameters('notConfigured')]",
-      "variables": "[parameters('notConfigured')]"
-    },
-    "resource": {
-      "listKeys": "[parameters('notConfigured')]",
-      "providers": "[parameters('notConfigured')]",
-      "reference": "[parameters('notConfigured')]",
-      "resourceGroup": "[parameters('notConfigured')]",
-      "resourceId": "[parameters('notConfigured')]",
-      "subscription": "[parameters('notConfigured')]"
-    }
+    "reference": "The reference function derives its value from a runtime state, and therefore cannot be used in the variables section. It can be used in outputs section of a template.",
+    "resourceGroup": "[resourceGroup()]",
+    "resourceId": "[parameters('skipValidation')]",
+    "subscription": "[subscription()]"
   },
-  "resources": [ ],
+  "resources": [
+    {
+      "name": "[parameters('storageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accountType": "Standard_LRS"
+      }
+    }
+  ],
   "outputs": {
-    "numericAdd": {
-      "type": "string",
-      "value": "[variables('numeric').add]"
+    "listKeys": {
+      "type": "object",
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2015-05-01-preview')]"
     },
-    "numericCopyIndex": {
-      "type": "string",
-      "value": "[variables('numeric').copyIndex]"
+    "providersNameSpace": {
+      "type": "object",
+      "value": "[variables('providers').nameSpace]"
     },
-    "numericDiv": {
-      "type": "string",
-      "value": "[variables('numeric').div]"
+    "providersType": {
+      "type": "object",
+      "value": "[variables('providers').type]"
     },
-    "numericInt": {
-      "type": "string",
-      "value": "[variables('numeric').int]"
+    "reference": {
+      "type": "object",
+      "value": "[reference(parameters('storageAccountName'))]"
     },
-    "numericLength": {
-      "type": "string",
-      "value": "[variables('numeric').length]"
+    "resourceGroup": {
+      "type": "object",
+      "value": "[variables('resourceGroup')]"
     },
-    "numericMod": {
+    "resourceId": {
       "type": "string",
-      "value": "[variables('numeric').mod]"
+      "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
     },
-    "numericMul": {
-      "type": "string",
-      "value": "[variables('numeric').mul]"
-    },
-    "numericSub": {
-      "type": "string",
-      "value": "[variables('numeric').sub]"
-    },
-    "stringBase64": {
-      "type": "string",
-      "value": "[variables('string').base64]"
-    },
-    "stringConcat": {
-      "type": "string",
-      "value": "[variables('string').concat]"
-    },
-    "stringPadLeft": {
-      "type": "string",
-      "value": "[variables('string').padLeft]"
-    },
-    "stringReplace": {
-      "type": "string",
-      "value": "[variables('string').replace]"
-    },
-    "stringSplit": {
-      "type": "string",
-      "value": "[variables('string').split[4]]"
-    },
-    "stringString": {
-      "type": "string",
-      "value": "[variables('string').string]"
-    },
-    "stringSubString": {
-      "type": "string",
-      "value": "[variables('string').subString]"
-    },
-    "stringToLower": {
-      "type": "string",
-      "value": "[variables('string').toLower]"
-    },
-    "stringToUpper": {
-      "type": "string",
-      "value": "[variables('string').toUpper]"
-    },
-    "stringTrim": {
-      "type": "string",
-      "value": "[variables('string').trim]"
-    },
-    "stringUniqueString": {
-      "type": "string",
-      "value": "[variables('string').uniqueString]"
-    },
-    "stringUri": {
-      "type": "string",
-      "value": "[variables('string').uri]"
-    },
-    "arrayConcat": {
-      "type": "array",
-      "value": "[variables('array').concat]"
-    },
-    "arrayLength": {
-      "type": "string",
-      "value": "[variables('array').length]"
-    },
-    "deploymentDeployment": {
-      "type": "string",
-      "value": "[variables('deployment').deployment]"
-    },
-    "deploymentParameters": {
-      "type": "string",
-      "value": "[variables('deployment').parameters]"
-    },
-    "deploymentVariables": {
-      "type": "string",
-      "value": "[variables('deployment').variables]"
-    },
-    "resourceListKeys": {
-      "type": "string",
-      "value": "[variables('resource').listKeys]"
-    },
-    "resourceProviders": {
-      "type": "string",
-      "value": "[variables('resource').providers]"
-    },
-    "resourceReference": {
-      "type": "string",
-      "value": "[variables('resource').reference]"
-    },
-    "resourceResourceGroup": {
-      "type": "string",
-      "value": "[variables('resource').resourceGroup]"
-    },
-    "resourceResourceId": {
-      "type": "string",
-      "value": "[variables('resource').resourceId]"
-    },
-    "resourceSubscription": {
-      "type": "string",
-      "value": "[variables('resource').subscription]"
+    "subscription": {
+      "type": "object",
+      "value": "[variables('subscription')]"
     }
   }
 }
