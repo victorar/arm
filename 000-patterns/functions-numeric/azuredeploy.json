@@ -1,0 +1,95 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "skipValidation": {
+      "type": "string",
+      "defaultValue": "skipValidation",
+      "allowedValues": [ "skipValidation" ],
+      "metadata": { "description": "This parameter is used for all functions that will skip validation." }
+    },
+    "String": {
+      "type": "string",
+      "defaultValue": "String"
+    },
+    "Int1": {
+      "type": "int",
+      "defaultValue": 10
+    },
+    "Int2": {
+      "type": "int",
+      "defaultValue": 6
+    },
+    "Array": {
+      "type": "array",
+      "defaultValue": [ "this", "is", "an", "array" ]
+    },
+    "Boolean": {
+      "type": "bool",
+      "defaultValue": true,
+      "allowedValues": [ true, false ]
+    },
+    "Object": {
+      "type": "object",
+      "defaultValue": {
+        "node1": {
+          "sub1a": "value1a",
+          "sub1b": "value1b"
+        },
+        "node2": {
+          "sub2a": "value2a",
+          "sub2b": "value2b"
+        }
+      }
+    },
+    "SecureString": {
+      "type": "securestring",
+      "defaultValue": "PassW0rd"
+    }
+  },
+  "variables": {
+    "add": "[parameters('skipValidation')]",
+    "copyIndex": "[parameters('skipValidation')]",
+    "div": "[parameters('skipValidation')]",
+    "int": "[parameters('skipValidation')]",
+    "length": "[parameters('skipValidation')]",
+    "mod": "[parameters('skipValidation')]",
+    "mul": "[parameters('skipValidation')]",
+    "sub": "[parameters('skipValidation')]"
+  },
+  "resources": [ ],
+  "outputs": {
+    "add": {
+      "type": "string",
+      "value": "[variables('add')]"
+    },
+    "copyIndex": {
+      "type": "string",
+      "value": "[variables('copyIndex')]"
+    },
+    "div": {
+      "type": "string",
+      "value": "[variables('div')]"
+    },
+    "int": {
+      "type": "string",
+      "value": "[variables('int')]"
+    },
+    "length": {
+      "type": "string",
+      "value": "[variables('length')]"
+    },
+    "mod": {
+      "type": "string",
+      "value": "[variables('mod')]"
+    },
+    "mul": {
+      "type": "string",
+      "value": "[variables('mul')]"
+    },
+    "sub": {
+      "type": "string",
+      "value": "[variables('sub')]"
+    }
+  }
+}
