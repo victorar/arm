@@ -81,7 +81,7 @@
     },
     "split": {
       "type": "string",
-      "value": "[variables('split')[4]]"
+      "value": "[variables('split')[0]]"
     },
     "string": {
       "type": "string",
