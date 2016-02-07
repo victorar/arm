@@ -19,32 +19,6 @@
     "Int2": {
       "type": "int",
       "defaultValue": 6
-    },
-    "Array": {
-      "type": "array",
-      "defaultValue": [ "this", "is", "an", "array" ]
-    },
-    "Boolean": {
-      "type": "bool",
-      "defaultValue": true,
-      "allowedValues": [ true, false ]
-    },
-    "Object": {
-      "type": "object",
-      "defaultValue": {
-        "node1": {
-          "sub1a": "value1a",
-          "sub1b": "value1b"
-        },
-        "node2": {
-          "sub2a": "value2a",
-          "sub2b": "value2b"
-        }
-      }
-    },
-    "SecureString": {
-      "type": "securestring",
-      "defaultValue": "PassW0rd"
     }
   },
   "variables": {
