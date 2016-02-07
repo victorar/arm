@@ -10,7 +10,7 @@
     },
     "String": {
       "type": "string",
-      "defaultValue": "String - 01 V@lu3   ",
+      "defaultValue": "String 3-Values  ",
       "minLength": 1,
       "maxLength": 24
     },
