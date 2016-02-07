@@ -4,13 +4,13 @@
   "parameters": {
     "notConfigured": {
       "type": "string",
-      "defaultValue": "notConfigured",
-      "allowedValues": [ "notConfigured" ],
-      "metadata": { "description": "This parameter is used for all expression that have not been configured yet." }
+      "defaultValue": "skipValidation",
+      "allowedValues": [ "skipValidation" ],
+      "metadata": { "description": "This parameter is used for all functions that have be skipped." }
     },
     "String": {
       "type": "string",
-      "defaultValue": "String",
+      "defaultValue": "This string - can be_replaced 01   ",
       "minLength": 1,
       "maxLength": 24
     },
@@ -48,173 +48,68 @@
     }
   },
   "variables": {
-    "numeric": {
-      "add": "[parameters('notConfigured')]",
-      "copyIndex": "[parameters('notConfigured')]",
-      "div": "[parameters('notConfigured')]",
-      "int": "[parameters('notConfigured')]",
-      "length": "[parameters('notConfigured')]",
-      "mod": "[parameters('notConfigured')]",
-      "mul": "[parameters('notConfigured')]",
-      "sub": "[parameters('notConfigured')]"
-    },
-    "string": {
-      "base64": "[base64(parameters('string'))]",
-      "concat": "[concat(parameters('string'),'fixedtext',parameters('int'))]",
-      "padLeft": "[padleft('7',3,'0')]",
-      "replace": "[replace('99d82f4b-b738-4f4c-9ba0-91beefd7998c','-','')]",
-      "split": "[split('The quick brown fox jumps over the lazy dog.',' ')]",
-      "string": "[parameters('Int')]",
-      "subString": "[substring('foobar', 3, 1)]",
-      "toLower": "[toLower(parameters('string'))]",
-      "toUpper": "[toUpper(parameters('string'))]",
-      "trim": "[trim(parameters('string'))]",
-      "uniqueString": "[uniqueString(parameters('string'))]",
-      "uri": "[uri('http://contoso.com/resources/azuredeploy.json','mytemplate.json')]"
-    },
-    "array": {
-      "concat": "[concat(parameters('array'),parameters('array'))]",
-      "length": "[length(parameters('array'))]"
-    },
-    "deployment": {
-      "deployment": "[parameters('notConfigured')]",
-      "parameters": "[parameters('notConfigured')]",
-      "variables": "[parameters('notConfigured')]"
-    },
-    "resource": {
-      "listKeys": "[parameters('notConfigured')]",
-      "providers": "[parameters('notConfigured')]",
-      "reference": "[parameters('notConfigured')]",
-      "resourceGroup": "[parameters('notConfigured')]",
-      "resourceId": "[parameters('notConfigured')]",
-      "subscription": "[parameters('notConfigured')]"
-    }
+    "base64": "[base64(parameters('string'))]",
+    "concat": "[concat(parameters('string'),'/fixedtext/',parameters('int'))]",
+    "padLeft": "[padleft(parameters('string'),3,'0')]",
+    "replace": "[replace(parameters('string'),'-','')]",
+    "split": "[split(parameters('string'),' ')]",
+    "string": "[parameters('Int')]",
+    "subString": "[substring(parameters('string'), 3, 4)]",
+    "toLower": "[toLower(parameters('string'))]",
+    "toUpper": "[toUpper(parameters('string'))]",
+    "trim": "[trim(parameters('string'))]",
+    "uniqueString": "[uniqueString(parameters('string'))]",
+    "uri": "[uri('http://contoso.com/resources/azuredeploy.json','mytemplate.json')]"
   },
   "resources": [ ],
   "outputs": {
-    "numericAdd": {
+    "Base64": {
       "type": "string",
-      "value": "[variables('numeric').add]"
+      "value": "[variables('base64')]"
     },
-    "numericCopyIndex": {
+    "concat": {
       "type": "string",
-      "value": "[variables('numeric').copyIndex]"
+      "value": "[variables('concat')]"
     },
-    "numericDiv": {
+    "padLeft": {
       "type": "string",
-      "value": "[variables('numeric').div]"
+      "value": "[variables('padLeft')]"
     },
-    "numericInt": {
+    "replace": {
       "type": "string",
-      "value": "[variables('numeric').int]"
+      "value": "[variables('replace')]"
     },
-    "numericLength": {
+    "split": {
       "type": "string",
-      "value": "[variables('numeric').length]"
+      "value": "[variables('split')[4]]"
     },
-    "numericMod": {
+    "string": {
       "type": "string",
-      "value": "[variables('numeric').mod]"
+      "value": "[variables('string')]"
     },
-    "numericMul": {
+    "subString": {
       "type": "string",
-      "value": "[variables('numeric').mul]"
+      "value": "[variables('subString')]"
     },
-    "numericSub": {
+    "toLower": {
       "type": "string",
-      "value": "[variables('numeric').sub]"
+      "value": "[variables('toLower')]"
     },
-    "stringBase64": {
+    "toUpper": {
       "type": "string",
-      "value": "[variables('string').base64]"
+      "value": "[variables('toUpper')]"
     },
-    "stringConcat": {
+    "trim": {
       "type": "string",
-      "value": "[variables('string').concat]"
+      "value": "[variables('trim')]"
     },
-    "stringPadLeft": {
+    "uniqueString": {
       "type": "string",
-      "value": "[variables('string').padLeft]"
+      "value": "[variables('uniqueString')]"
     },
-    "stringReplace": {
+    "uri": {
       "type": "string",
-      "value": "[variables('string').replace]"
-    },
-    "stringSplit": {
-      "type": "string",
-      "value": "[variables('string').split[4]]"
-    },
-    "stringString": {
-      "type": "string",
-      "value": "[variables('string').string]"
-    },
-    "stringSubString": {
-      "type": "string",
-      "value": "[variables('string').subString]"
-    },
-    "stringToLower": {
-      "type": "string",
-      "value": "[variables('string').toLower]"
-    },
-    "stringToUpper": {
-      "type": "string",
-      "value": "[variables('string').toUpper]"
-    },
-    "stringTrim": {
-      "type": "string",
-      "value": "[variables('string').trim]"
-    },
-    "stringUniqueString": {
-      "type": "string",
-      "value": "[variables('string').uniqueString]"
-    },
-    "stringUri": {
-      "type": "string",
-      "value": "[variables('string').uri]"
-    },
-    "arrayConcat": {
-      "type": "array",
-      "value": "[variables('array').concat]"
-    },
-    "arrayLength": {
-      "type": "string",
-      "value": "[variables('array').length]"
-    },
-    "deploymentDeployment": {
-      "type": "string",
-      "value": "[variables('deployment').deployment]"
-    },
-    "deploymentParameters": {
-      "type": "string",
-      "value": "[variables('deployment').parameters]"
-    },
-    "deploymentVariables": {
-      "type": "string",
-      "value": "[variables('deployment').variables]"
-    },
-    "resourceListKeys": {
-      "type": "string",
-      "value": "[variables('resource').listKeys]"
-    },
-    "resourceProviders": {
-      "type": "string",
-      "value": "[variables('resource').providers]"
-    },
-    "resourceReference": {
-      "type": "string",
-      "value": "[variables('resource').reference]"
-    },
-    "resourceResourceGroup": {
-      "type": "string",
-      "value": "[variables('resource').resourceGroup]"
-    },
-    "resourceResourceId": {
-      "type": "string",
-      "value": "[variables('resource').resourceId]"
-    },
-    "resourceSubscription": {
-      "type": "string",
-      "value": "[variables('resource').subscription]"
+      "value": "[variables('uri')]"
     }
   }
 }
