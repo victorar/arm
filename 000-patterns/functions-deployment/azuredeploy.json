@@ -2,34 +2,34 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "notConfigured": {
+    "skipValidation": {
       "type": "string",
-      "defaultValue": "notConfigured",
-      "allowedValues": [ "notConfigured" ],
-      "metadata": { "description": "This parameter is used for all expression that have not been configured yet." }
+      "defaultValue": "skipValidation",
+      "allowedValues": [ "skipValidation" ],
+      "metadata": { "description": "This parameter is used for all functions that will skip validation." }
     },
-    "String": {
+    "string": {
       "type": "string",
-      "defaultValue": "String",
+      "defaultValue": "This is a string",
       "minLength": 1,
       "maxLength": 24
     },
-    "Int": {
+    "int": {
       "type": "int",
       "defaultValue": 10,
       "minValue": 1,
       "maxValue": 1000
     },
-    "Array": {
+    "array": {
       "type": "array",
       "defaultValue": [ "this", "is", "an", "array" ]
     },
-    "Boolean": {
+    "bool": {
       "type": "bool",
       "defaultValue": true,
       "allowedValues": [ true, false ]
     },
-    "Object": {
+    "object": {
       "type": "object",
       "defaultValue": {
         "node1": {
@@ -42,20 +42,42 @@
         }
       }
     },
-    "SecureString": {
-      "type": "securestring",
-      "defaultValue": "PassW0rd"
+    "secureString": {
+      "type": "securestring"
     }
   },
   "variables": {
-      "deployment": "[deployment()]"
+    "deployment": "[deployment()]"
   },
   "resources": [ ],
   "outputs": {
-
     "deployment": {
       "type": "object",
       "value": "[variables('deployment')]"
+    },
+    "string": {
+      "type": "string",
+      "value": "[parameters('string')]"
+    },
+    "int": {
+      "type": "int",
+      "value": "[parameters('int')]"
+    },
+    "array": {
+      "type": "array",
+      "value": "[parameters('array')]"
+    },
+    "bool": {
+      "type": "bool",
+      "value": "[parameters('bool')]"
+    },
+    "object": {
+      "type": "object",
+      "value": "[parameters('object')]"
+    },
+    "secureString": {
+      "type": "securestring",
+      "value": "[parameters('securestring')]"
     }
   }
 }
