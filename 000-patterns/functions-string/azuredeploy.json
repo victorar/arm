@@ -10,7 +10,7 @@
     },
     "String": {
       "type": "string",
-      "defaultValue": "This string - can be_replaced 01   ",
+      "defaultValue": "String - 01 V@lu3   ",
       "minLength": 1,
       "maxLength": 24
     },
