@@ -4,6 +4,9 @@
   "parameters": {
     "apiVersion": {
       "type": "object"
+    },
+    "shared": {
+      "type": "object"
     }
   },
   "variables": {
