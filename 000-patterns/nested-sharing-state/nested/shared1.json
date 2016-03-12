@@ -22,6 +22,24 @@
     },
     "apiVersionComputeVirtualMachines": {
       "type": "string"
+    },
+    "adminUsername": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "string"
+    },
+    "domainFqdn": {
+      "type": "string"
+    },
+    "domainFqdn": {
+      "type": "string"
+    },
+    "vmPrefix": {
+      "type": "string"
+    },
+    "storagePrefix": {
+      "type": "string"
     }
   },
   "variables": {
