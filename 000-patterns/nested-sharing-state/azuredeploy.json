@@ -1,7 +1,17 @@
 ﻿{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": { },
+  "parameters": {
+    "adminUsername": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "domainFqdn": {
+      "type": "string"
+    }
+  },
   "variables": {
     "template": {
       "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/000-foundation/examples/nested-sharing-state/",
@@ -19,6 +29,13 @@
       },
       "compute": { "virtualMachines": "2015-06-15" }
     }
+    "shared": {
+      "username": "[parameters('adminUsername')]",
+      "password": "[parameters('adminPassword')]",
+      "fqdn": "[parameters('domainFqdn')]",
+      "vmPrefix": "myVm",
+      "storagePrefix": "storage"
+    }
   },
   "resources": [
     {
@@ -28,7 +45,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested1)]",
+          "uri": "[concat(variables('template').base, 'nested/', variables('template').nested1)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -52,6 +69,21 @@
           },
           "apiVersionComputeVirtualMachines": {
             "value": "[variables('apiVersion').compute.virtualMachines]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "domainFqdn": {
+            "value": "[parameters('domainFqdn')]"
+          },
+          "vmPrefix": {
+            "value": "[variables('vmPrefix')]"
+          },
+          "storagePrefix": {
+            "value": "[variables('storagePrefix')]"
           }
         }
       }
@@ -63,12 +95,15 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').nested2)]",
+          "uri": "[concat(variables('template').base, 'nested/', variables('template').nested2)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "apiVersion": {
             "value": "[variables('apiVersion')]"
+          },
+          "shared": {
+            "value": "[variables('shared')]"
           }
         }
       }
