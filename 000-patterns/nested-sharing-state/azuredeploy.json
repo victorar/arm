@@ -28,7 +28,7 @@
         "publicIPAddresses": "2015-06-15"
       },
       "compute": { "virtualMachines": "2015-06-15" }
-    }
+    },
     "shared": {
       "username": "[parameters('adminUsername')]",
       "password": "[parameters('adminPassword')]",
