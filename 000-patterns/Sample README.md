@@ -5,7 +5,7 @@
 
 This template deploys a %solution name%. The %solution name% is a %description%
 
-`Tags: %Tag1, Tag2, Tag3%`
+`Tags: %Tag1%, %Tag2%, %Tag3%`
 
 ## Solution diagram and deployed resources
 
