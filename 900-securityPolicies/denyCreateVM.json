@@ -1,0 +1,7 @@
+{
+  "if": {
+    "source": "action",
+    "equals": "Microsoft.Compute/virtualMachines/write"
+  },
+  "then": { "effect": "deny" }
+}
