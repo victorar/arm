@@ -18,9 +18,6 @@ New-AzureRmPolicyAssignment -Name myPolicyAssignment -PolicyDefinition $PolicyDe
 Some related PowerShell cmdlets
 
 ```
-Get-AzureRmSubscription
-Select-AzureRmSubscription -SubscriptionId 11430ac3-e443-4f27-bbac-82775ecd76c1
-
 ## Get current PolicyDefinitions
 Get-AzureRmPolicyDefinition | ft name, properties
 
