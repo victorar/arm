@@ -1,15 +1,23 @@
 Azure Resource Manager QuickStart Templates
+
 This is a repo that contains all the currently available Azure Resource Manager templates contributed by the community. A searchable template index is maintained at https://azure.microsoft.com/en-us/documentation/templates/
+
 The following information is relevant to get started with contributing to this repository.
-•	Contribution guide. Describes the minimal guidelines for contributing.
-•	Best practices. Best practices for improving the quality of your template design.
-•	GitHub Tutorial. Step by step to get you started with GitHub.
+
++	Contribution guide. Describes the minimal guidelines for contributing.
++	Best practices. Best practices for improving the quality of your template design.
++	GitHub Tutorial. Step by step to get you started with GitHub.
+
 You are currently reading the best practices guide.
+
 Deployment template best practices
-•	It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
-•	It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
-•	A starter template is provided here for you to follow.
+
++	It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
++	It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
++	A starter template is provided here for you to follow.
+
 The following guidelines are relevant to the main deployment template and nested templates (if used).
+
 1.	Template parameters should follow camelCasing
 2.	Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
 o	Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
