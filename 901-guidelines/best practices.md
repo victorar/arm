@@ -20,47 +20,55 @@ The following guidelines are relevant to the main deployment template and nested
 
 1.	Template parameters should follow camelCasing
 2.	Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
-o	Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
-o	Other things a user must know to complete a workflow (e.g. admin user name on a vm)
-o	Secrets (e.g. admin password on a vm)
-o	Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
-o	If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
+ *	Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
+ *	Other things a user must know to complete a workflow (e.g. admin user name on a vm)
+ *	Secrets (e.g. admin password on a vm)
+ *	Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
+ *	If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
 3.	Name variables using this scheme templateScenarioResourceName (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
 4.	Every parameter in the template must have the lower-case description tag specified using the metadata property. This looks like below
-5.	"parameters": {
-6.	"storageAccountType": {
-7.	  "type": "string",
-8.	  "metadata": {
-9.	    "description": "The type of the new storage account created to store the VMs disks"
-10.	  }
-11.	}
+
+```
+"parameters": {
+  "storageAccountType": {
+    "type": "string",
+    "metadata": {
+    "description": "The type of the new storage account created to store the VMs disks"
+    }
+  }
 }
-12.	Do not hardcode the apiVersion for a resource. Create a complex object variable with the name apiVersion. Define a sub value for each resource provider, containing the api versions for each resource type used in the template. With this complex object the the apiVersion property of the resource uses the same namespace as the resource type. This also allows you to easily update an apiVersion for a specific resource type.
-13.	"variables": {
-14.	"apiVersion": {
-15.	  "resources": { "deployments": "2015-01-01" },
-16.	  "storage": { "storageAccounts": "2015-06-15" },
-17.	  "network": {
-18.	    "virtualNetworks": "2015-06-15",
-19.	    "networkSecurityGroups": "2015-06-15"
-20.	  }
-21.	}
-22.	},
-23.	"resources": [
-24.	{
-25.	  "name": "[variables('storageAccountName')]",
-26.	  "type": "Microsoft.Storage/storageAccounts",
-27.	  "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
-28.	  "location": "[resourceGroup().location]",
-29.	  "comments": "This storage account is used to store the VM disks",
-30.	  "properties": {
-31.	    "accountType": "Standard_GRS"
-32.	  }
-33.	}
+```
+
+5.	Do not hardcode the apiVersion for a resource. Create a complex object variable with the name apiVersion. Define a sub value for each resource provider, containing the api versions for each resource type used in the template. With this complex object the the apiVersion property of the resource uses the same namespace as the resource type. This also allows you to easily update an apiVersion for a specific resource type.
+
+```
+"variables": {
+  "apiVersion": {
+    "resources": { "deployments": "2015-01-01" },
+    "storage": { "storageAccounts": "2015-06-15" },
+    "network": {
+      "virtualNetworks": "2015-06-15",
+      "networkSecurityGroups": "2015-06-15"
+    }
+  }
+},
+"resources": [
+  {
+    "name": "[variables('storageAccountName')]",
+    "type": "Microsoft.Storage/storageAccounts",
+    "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
+    "location": "[resourceGroup().location]",
+    "comments": "This storage account is used to store the VM disks",
+    "properties": {
+      "accountType": "Standard_GRS"
+    }
+  }
 ]
+```
 
-34.	For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use "displayName" tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
+6.	For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use "displayName" tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
 
+```
 "resources": [
   {
     "name": "[variables('storageAccountName')]",
@@ -74,35 +82,43 @@ o	If you must include a parameter, define a defaultValue, unless the parameter i
     }
   }
 ]
-35.	          
-36.	
-37.	Specifying a lower-case comments property for each resource in the template, helps other contributors to understand the purpose of the resource.
-38.	"resources": [
-39.	{
-40.	  "name": "[variables('storageAccountName')]",
-41.	  "type": "Microsoft.Storage/storageAccounts",
-42.	  "apiVersion": "[variables('apiVersionStorage')]",
-43.	  "location": "[resourceGroup().location]",
-44.	  "comments": "This storage account is used to store the VM disks",
-45.	  "properties": {
-46.	    "accountType": "Standard_GRS"
-47.	  }
-48.	}
+```
+	
+7.	Specifying a lower-case comments property for each resource in the template, helps other contributors to understand the purpose of the resource.
+
+```	
+"resources": [
+  {
+    "name": "[variables('storageAccountName')]",
+    "type": "Microsoft.Storage/storageAccounts",
+    "apiVersion": "[variables('apiVersionStorage')]",
+    "location": "[resourceGroup().location]",
+    "comments": "This storage account is used to store the VM disks",
+    "properties": {
+      "accountType": "Standard_GRS"
+    }
+  }
 ]
-49.	Do not use a parameter to specify the location. Use the location property of the resourceGroup instead. By using the resourceGroup().location expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
-50.	"resources": [
-51.	{
-52.	  "name": "[variables('storageAccountName')]",
-53.	  "type": "Microsoft.Storage/storageAccounts",
-54.	  "apiVersion": "[variables('apiVersionStorage')]",
-55.	  "location": "[resourceGroup().location]",
-56.	  "comments": "This storage account is used to store the VM disks",
-57.	  "properties": {
-58.	    "accountType": "Standard_GRS"
-59.	  }
-60.	}
+```
+
+8.	Do not use a parameter to specify the location. Use the location property of the resourceGroup instead. By using the resourceGroup().location expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
+
+```
+"resources": [
+  {
+    "name": "[variables('storageAccountName')]",
+    "type": "Microsoft.Storage/storageAccounts",
+    "apiVersion": "[variables('apiVersionStorage')]",
+    "location": "[resourceGroup().location]",
+    "comments": "This storage account is used to store the VM disks",
+    "properties": {
+      "accountType": "Standard_GRS"
+    }
+  }
 ]
-61.	Do not create a parameter for a storage account name. Storage account names need to be lower case and can't contain hyphens (-) in addition to other domain name restrictions. A storage account has a limit of 24 characters. They also need to be globally unique. To prevent any validation issue configure a variables (using the expression uniqueString and a static value storage). Storage accounts with a common prefix (uniquestring) will not get clustered on the same racks.
+```
+
+9.	Do not create a parameter for a storage account name. Storage account names need to be lower case and can't contain hyphens (-) in addition to other domain name restrictions. A storage account has a limit of 24 characters. They also need to be globally unique. To prevent any validation issue configure a variables (using the expression uniqueString and a static value storage). Storage accounts with a common prefix (uniquestring) will not get clustered on the same racks.
 62.	"variables": {
 63.	"storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]"
 }
