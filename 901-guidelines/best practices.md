@@ -1,4 +1,4 @@
-Azure Resource Manager QuickStart Templates
+# Azure Resource Manager QuickStart Templates
 
 This is a repo that contains all the currently available Azure Resource Manager templates contributed by the community. A searchable template index is maintained at https://azure.microsoft.com/en-us/documentation/templates/
 
@@ -10,11 +10,11 @@ The following information is relevant to get started with contributing to this r
 
 You are currently reading the best practices guide.
 
-Deployment template best practices
+## Deployment template best practices
 
-+	It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
-+	It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
-+	A starter template is provided here for you to follow.
+ *	It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
+ *	It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
+ *	A starter template is provided here for you to follow.
 
 The following guidelines are relevant to the main deployment template and nested templates (if used).
 
