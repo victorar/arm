@@ -1,47 +1,54 @@
-Azure Resource Manager QuickStart Templates
+# Azure Resource Manager QuickStart Templates
+
 This is a repo that contains all the currently available Azure Resource Manager templates contributed by the community. A searchable template index is maintained at https://azure.microsoft.com/en-us/documentation/templates/
 The following information is relevant to get started with contributing to this repository.
 
-•	Contribution guide. Describes the minimal guidelines for contributing.
-•	Best practices. Best practices for improving the quality of your template design.
-•	GitHub Tutorial. Step by step to get you started with GitHub.
++	Contribution guide. Describes the minimal guidelines for contributing.
++	Best practices. Best practices for improving the quality of your template design.
++	GitHub Tutorial. Step by step to get you started with GitHub.
 
 You are currently reading the contribution guide.
 
-Contribution guide
+## Contribution guide
 
 To make sure your template is added to Azure.com index, please follow these guidelines. Any templates that are out of compliance will be added to the blacklist and not be indexed on Azure.com
 Files, folders and naming conventions
 
 1.	Every deployment template and its associated files must be contained in its own folder. Name this folder something that describes what your template does. Usually this naming pattern looks like appName-osName or level-platformCapability (e.g. 101-vm-user-image) 
-o	Required – Numbering should start at 101. 100 is reserved for things that need to be at the top.
-o	Protip - Try to keep the name of your template folder short so that it fits inside the Github folder name column width.
+ +	Required – Numbering should start at 101. 100 is reserved for things that need to be at the top.
+ +	Protip - Try to keep the name of your template folder short so that it fits inside the Github folder name column width.
 2.	Github uses ASCII for ordering files and folder. For consistent ordering create all files and folder in lowercase. The only exception to this guideline is the README.md, that should be in the format UPPERCASE.lowercase.
 3.	Include a README.md file that explains how the template works. 
-o	Guidelines on the README.md file below.
+ + Guidelines on the README.md file below.
 4.	The template file must be named azuredeploy.json.
 5.	There should be a parameters file named azuredeploy.parameters.json. 
-o	Please fill out the values for the parameters according to rules defined in the template (allowed values etc.), For parameters without rules, a simple "changeme" will do as the acomghbot only checks for syntactic correctness using the ARM Validate Template API.
+ + Please fill out the values for the parameters according to rules defined in the template (allowed values etc.), For parameters without rules, a simple "changeme" will do as the acomghbot only checks for syntactic correctness using the ARM Validate Template API.
 6.	The template folder must contain a metadata.json file to allow the template to be indexed on Azure.com. 
-o	Guidelines on the metadata.json file below.
+ + Guidelines on the metadata.json file below.
 7.	The custom scripts that are needed for successful template execution must be placed in a folder called scripts.
 8.	Linked templates must be placed in a folder called nested.
 9.	Images used in the README.md must be placed in a folder called images. 
 10.	Any resources that need to be setup outside the template should be named prefixed with existing e.g. existingVNET, existingDiagnosticsStorageAccount
  
+## README.md
 
-README.md
 The README.md describes your deployment. A good description helps other community members to understand your deployment. The README.md uses Github Flavored Markdown for formatting text. If you want to add images to your README.md file, store the images in the images folder. Reference the images in the README.md with a relative path (e.g. ![alt text](images/namingConvention.png "Files, folders and naming conventions")). This ensures the link will reference the target repository if the source repository is forked. A good README.md contains the following sections
-•	Deploy to Azure button
-•	Description of what the template will deploy
-•	Tags, that can be used for seach. Specify the tags comma seperated and enclosed between two back-ticks (e.g Tags: cluster, ha, sql)
-•	*Optional: Prerequisites
-•	*Optional: Description on how to use the application
-•	*Optional: Notes
+
++	Deploy to Azure button
++	Description of what the template will deploy
++	Tags, that can be used for seach. Specify the tags comma seperated and enclosed between two back-ticks (e.g Tags: cluster, ha, sql)
++	*Optional: Prerequisites
++	*Optional: Description on how to use the application
++	*Optional: Notes
+
 Do not include the parameters or the variables of the deployment script. We render this on Azure.com from the template. Specifying these in the README.md will result in duplicate entries on Azure.com.
 You can download a template README.md. This folder also contains some example README.md files.
-metadata.json
+
+## metadata.json
+
 A valid metedata.json must adhere to the following structure
+
+```
 {
   "itemDisplayName": "",
   "description": "",
@@ -49,6 +56,8 @@ A valid metedata.json must adhere to the following structure
   "githubUsername": "",
   "dateUpdated": "<e.g. 2015-12-20>"
 }
+```
+
 The metadata.json file will be validated using these rules
 itemDisplayName
 •	Cannot be more than 60 characters
