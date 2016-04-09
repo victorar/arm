@@ -271,16 +271,5 @@ For this guidance a deployment of a SharePoint farm is used as an example. The S
 + Scripts. Widely reusable scripts are applicable for each instance type (e.g. initialize and format additional disks). Custom scripts are created for specific customization purpose are different per instance type.
  
 The main template is stored in the root of the folder, the other templates are stored in the nested folder. The scripts are stored in the scripts folder.
-See the starter template here for more information on passing validation.
-Bmoore appendix on when to use params, vars & literals:
-Templates
- 
-Scrub parameter names for collisions with PowerShell (e.g. location, it should be siteLocation).  The PowerShell cmdlets that deploy templates have parameters for things like -StorageAccountName and -Location.  If the template contains parameters of the same name, PowerShell will prompt with a query like -LocationFromTemplate which has confused many users.  Naming parameters with something less ambiguous addresses this issue.  For example:
-Use "resourceLocation", resourceGroup().location, "webSiteLocation" instead of "location"
-Use "vhdStorageAccountName", "diagnosticsStorageAccountName" instead of "StorageAccountName"
- 
-Use child resources (instead of siblings) when possible, this make it easier to identifier parent/child and dependency relationships particularly when viewing the outline of the template (customers have also reported this as "more robust" during deployment)
- 
-If the name of a resource isn't significant (e.g. storage account for VHD), use [uniqueString(resourceGroup().id) to generate a name.  That will create a string unique to the resourcegroup, if more than one is needed in that resource group consider [concat('vhdstorage',uniqueString(resourceGroup().id))]
- 
 
+See the starter template here for more information on passing validation.
