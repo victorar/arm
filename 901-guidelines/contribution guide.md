@@ -3,9 +3,9 @@
 This repo contains all currently available Azure Resource Manager templates contributed by the community. A searchable template index is maintained at https://azure.microsoft.com/en-us/documentation/templates/
 The following information is relevant to get started with contributing to this repository.
 
-+	Contribution guide. Describes the minimal guidelines for contributing.
-+	Best practices. Best practices for improving the quality of your template design.
-+	GitHub Tutorial. Step by step to get you started with GitHub.
++	**Contribution guide**. Describes the minimal guidelines for contributing.
++	**Best practices**. Best practices for improving the quality of your template design.
++	**GitHub Tutorial**. Step by step to get you started with GitHub.
 
 You are currently reading the contribution guide.
 
@@ -32,7 +32,7 @@ Files, folders and naming conventions
  
 ## README.md
 
-The README.md describes your deployment. A good description helps other community members to understand your deployment. The README.md uses Github Flavored Markdown for formatting text. If you want to add images to your README.md file, store the images in the images folder. Reference the images in the README.md with a relative path (e.g. ![alt text](images/namingConvention.png "Files, folders and naming conventions")). This ensures the link will reference the target repository if the source repository is forked. A good README.md contains the following sections
+The README.md describes your deployment. A good description helps other community members to understand your deployment. The README.md uses Github Flavored Markdown for formatting text. If you want to add images to your README.md file, store the images in the images folder. Reference the images in the README.md with a relative path (e.g. `![alt text](images/namingConvention.png "Files, folders and naming conventions")`). This ensures the link will reference the target repository if the source repository is forked. A good README.md contains the following sections
 
 +	Deploy to Azure button
 +	Description of what the template will deploy
