@@ -248,7 +248,7 @@ For this guidance a deployment of a SharePoint farm is used as an example. The S
 + Member resources templates. Each within an application tier within has its own configuration. Within a tier different instance types can be defined. (e.g. first instance creates a new cluster, additional instances are added to the existing cluster). Each instance type will have its own deployment template.
 + Scripts. Widely reusable scripts are applicable for each instance type (e.g. initialize and format additional disks). Custom scripts are created for specific customization purpose are different per instance type.
 
-![alt text](../master/images/nestedTemplateDesign.png "Nested templates design")
+![alt text](images/nestedTemplateDesign.png "Nested templates design")
  
 The **main template** is stored in the **root** of the folder, the **other templates** are stored in the **nested** folder. The scripts are stored in the **scripts** folder.
 
