@@ -140,7 +140,7 @@ The following guidelines are relevant to the main deployment template and nested
  
 12. Use tags to add metadata to resources allows you to add additional information about your resources. A good use case for tags is adding metadata to a resource for billing detail purposes. 
 
-13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('apiVersion').storage.storageAccounts]"`).
+13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('storage').storageAccounts.type]"`).
 
  ```
  "variables": {
@@ -164,7 +164,7 @@ The following guidelines are relevant to the main deployment template and nested
  ]
  ```
 
- A complex object cannot contain an expression that references a value from a complex object. Define a seperate variable for this purpose.
+ Note: A complex object cannot contain an expression that references a value from a complex object. Define a seperate variable for this purpose.
 
 14. The domainNameLabel property for publicIPAddresses used must be unique. domainNameLabel are required to be betweeen 3 and 63 charcters long and to follow the rules specified by this regular expression ^[a-z][a-z0-9-]{1,61}[a-z0-9]$. As the uniquestring function will generate a string that is 13 characters long in the example below it is presumed that the dnsPrefixString prefix string has been checked to be no more than 50 charcters long and to conform to those rules
 
