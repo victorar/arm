@@ -211,53 +211,31 @@ It is obvious to create a single deployment template for deploying a single reso
 ### Nested templates
 
 Define a complex object variable in the azuredeploy.json that contains the absolute Uri of the repository folder. Add an relative path entry in that variable for each nested template you are using in your deployment. This gives quick overview of the nested templates referenced in your resources. Store all nested templates in the nested folder. The templatelink in the resource combines the absolute Uri with the relative path. When you fork a repository you only need to update the absolute Uri in the azuredeploy.json file. 
-It is possible to deploy a nested template based on parameter input. The parameter input is used to concatenate the relative path to a nested template. Based on the user input a different template is deployed. This enabled a conditional nested template deployment. The paramater is used to define the name of the template. Ensure the allowedValues of the input paramater match the names of the nested templates.
 
 ```
-"parameters": {
-  "newOrExisting": {
-    "type": "string",
-    "allowedValues": [
-      "new",
-      "existing"
-    ],
-    "metadata": {
-      "description": "Based on this selection a different template will be deployed"
-    }
-  }
-},
 "variables": {
   "template": {
     "base": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-create-availability-set",
-    "shared": "nested/sharedresources.json",
-    "optional": "[concat('nested/optional_', parameters('optionalResource'),'.json')]",
-    "membertype1": "nested/membertype1.json",
-    "membertype2": "nested/membertype2.json"
+    "shared": "nested/sharedresources.json"
   }
 },
 "resources": [
   {
-    "name": "optional",
+    "name": "shared",
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2015-01-01",
-    "dependsOn": [
-      "[concat('Microsoft.Resources/deployments/', 'shared')]"
-    ],
     "properties": {
       "mode": "Incremental",
       "templateLink": {
-        "uri": "[uri(variables('template').base, variables('template').optional)]",
+        "uri": "[uri(variables('template').base, variables('template').shared)]",
         "contentVersion": "1.0.0.0"
-      },
-      "parameters": {
-        "optionalResource": {
-          "value": "[parameters('optionalResource')]"
-        }
       }
     }
   }
 ]
 ```
+
+It is possible to deploy a nested template based on parameter input. The parameter input is used to concatenate the relative path to a nested template. Based on the user input a different template is deployed. This enabled a conditional nested template deployment. The paramater is used to define the name of the template. Ensure the allowedValues of the input paramater match the names of the nested templates.
 
 ### Nested templates design for more advanced scenarios
 
