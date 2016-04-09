@@ -13,8 +13,8 @@ You are currently reading the best practices guide.
 ## Deployment template best practices
 
 + It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
-+ It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
-+ A starter template is provided here for you to follow.
++ It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or [format online using this link](https://www.bing.com/search?q=json+formatter).
++ A starter template is provided [here](https://github.com/Azure/azure-quickstart-templates/tree/master/100-starter-template-with-validation) for you to follow.
 
 The following guidelines are relevant to the main deployment template and nested templates (if used).
 
@@ -247,7 +247,9 @@ For this guidance a deployment of a SharePoint farm is used as an example. The S
 + Optional resources template. Conditionally deploys resources based on a parameter (e.g. a jumpbox)
 + Member resources templates. Each within an application tier within has its own configuration. Within a tier different instance types can be defined. (e.g. first instance creates a new cluster, additional instances are added to the existing cluster). Each instance type will have its own deployment template.
 + Scripts. Widely reusable scripts are applicable for each instance type (e.g. initialize and format additional disks). Custom scripts are created for specific customization purpose are different per instance type.
- 
-The main template is stored in the root of the folder, the other templates are stored in the nested folder. The scripts are stored in the scripts folder.
 
-See the starter template here for more information on passing validation.
+![alt text](../master/images/nestedTemplateDesign.png "Nested templates design")
+ 
+The **main template** is stored in the **root** of the folder, the **other templates** are stored in the **nested** folder. The scripts are stored in the **scripts** folder.
+
+See the starter template [here](https://github.com/Azure/azure-quickstart-templates/tree/master/100-STARTER-TEMPLATE-with-VALIDATION) for more information on passing validation.
