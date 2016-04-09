@@ -137,13 +137,13 @@ The following guidelines are relevant to the main deployment template and nested
  If you have other values in your template configured with a public namespace, change these to reflect the same reference function. For example the storageUri property of the virtual machine diagnosticsProfile.
 
  ```
- "diagnosticsProfile": {    "bootDiagnostics": {        "enabled": "true",        "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob]"    }}
+ "diagnosticsProfile": {"bootDiagnostics": {"enabled": "true","storageUri":"[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob]"}}
  ```
  
  You can also reference an existing storage account in a different resource group.
 
  ```
- "osDisk": {    "name": "osdisk",    "vhd": {        "uri": "[concat(reference(resourceId(parameters('existingResourceGroup'), 'Microsoft.Storage/storageAccounts/', parameters('existingStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"    }}
+ "osDisk": {"name": "osdisk", "vhd": {"uri":"[concat(reference(resourceId(parameters('existingResourceGroup'), 'Microsoft.Storage/storageAccounts/', parameters('existingStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"}}
  ```
  
 11. Passwords must be passed into parameters of type securestring. Do not specify a defaultValue for a parameter that is used for a password or an SSH key. Passwords must also be passed to customScriptExtension using the commandToExecute property in protectedSettings.
@@ -169,7 +169,7 @@ The following guidelines are relevant to the main deployment template and nested
 
 13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('apiVersion').storage.storageAccounts]"`).
 
-
+ ```
 90.	"variables": {
 91.	"apiVersion": {
 92.	  "storage": { "storageAccounts": "2015-06-15" }
@@ -192,8 +192,13 @@ The following guidelines are relevant to the main deployment template and nested
 109.	  }
 110.	}
 ]
-A complex object cannot contain an expression that references a value from a complex object. Define a seperate variable for this purpose.
-111.	The domainNameLabel property for publicIPAddresses used must be unique. domainNameLabel are required to be betweeen 3 and 63 charcters long and to follow the rules specified by this regular expression ^[a-z][a-z0-9-]{1,61}[a-z0-9]$. As the uniquestring function will generate a string that is 13 characters long in the example below it is presumed that the dnsPrefixString prefix string has been checked to be no more than 50 charcters long and to conform to those rules
+```
+
+ A complex object cannot contain an expression that references a value from a complex object. Define a seperate variable for this purpose.
+
+14. The domainNameLabel property for publicIPAddresses used must be unique. domainNameLabel are required to be betweeen 3 and 63 charcters long and to follow the rules specified by this regular expression ^[a-z][a-z0-9-]{1,61}[a-z0-9]$. As the uniquestring function will generate a string that is 13 characters long in the example below it is presumed that the dnsPrefixString prefix string has been checked to be no more than 50 charcters long and to conform to those rules
+
+```
 112.	"parameters": {
 113.	"publicIPAddressName": {
 114.	  "type": "string"
@@ -206,7 +211,11 @@ A complex object cannot contain an expression that references a value from a com
 121.	"variables": {
 122.	"dnsPrefix": "[concat(parameters('dnsPrefixString'),uniquestring(resourceGroup().id))]"
 }
-If a template creates any new publicIPAddresses then it should have an output section that provides details of the IP address and fully qualified domain created to easily retrieve these details after deployment. 
+```
+
+15. If a template creates any new publicIPAddresses then it should have an output section that provides details of the IP address and fully qualified domain created to easily retrieve these details after deployment. 
+
+```
 "outputs": {
 "fqdn": {
   "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
@@ -217,15 +226,24 @@ If a template creates any new publicIPAddresses then it should have an output se
   "type": "string"
 }
 }
-publicIPAddresses assigned to a Virtual Machine Instance should only be used when these are required for application purposes, for connectivity to the resources for debug, management or administrative purposes either inboundNatRules, virtualNetworkGateways or a jumpbox should be used.
-Single template or nested templates
+```
+
+16. publicIPAddresses assigned to a Virtual Machine Instance should only be used when these are required for application purposes, for connectivity to the resources for debug, management or administrative purposes either inboundNatRules, virtualNetworkGateways or a jumpbox should be used.
+
+## Single template or nested templates
+
 It is obvious to create a single deployment template for deploying a single resource. Nested templates are common for more advanced scenarios. The following section is by no means a hard requirement, but more of a guidance to help to decide between a single template or a decomposed nested template design. 
-•	Create a single template for a single tier application
-•	Create a nested templates deployment for a multitier application
-•	Use nested templates for conditional deployment
-Nested templates
+
+* Create a single template for a single tier application
+* Create a nested templates deployment for a multitier application
+* Use nested templates for conditional deployment
+
+### Nested templates
+
 Define a complex object variable in the azuredeploy.json that contains the absolute Uri of the repository folder. Add an relative path entry in that variable for each nested template you are using in your deployment. This gives quick overview of the nested templates referenced in your resources. Store all nested templates in the nested folder. The templatelink in the resource combines the absolute Uri with the relative path. When you fork a repository you only need to update the absolute Uri in the azuredeploy.json file. 
 It is possible to deploy a nested template based on parameter input. The parameter input is used to concatenate the relative path to a nested template. Based on the user input a different template is deployed. This enabled a conditional nested template deployment. The paramater is used to define the name of the template. Ensure the allowedValues of the input paramater match the names of the nested templates.
+
+```
 "parameters": {
   "newOrExisting": {
     "type": "string",
@@ -272,14 +290,18 @@ It is possible to deploy a nested template based on parameter input. The paramet
     }
   }
 ]
-Nested templates design for more advanced scenarios
+```
+
+### Nested templates design for more advanced scenarios
+
 When you decide to decompose your template design into multiple nested templates, the following guidelines will help to standardize the design. These guidelines are based on the best practices for designing Azure Resource Manager templates documentation.
 For this guidance a deployment of a SharePoint farm is used as an example. The SharePoint farm consists of multiple tiers. Each tier can be created with high availability. The recommended design consists of the following templates.
-•	Main template (azuredeploy.json). Used for the input parameters.
-•	Shared resouces template. Deploys the shared resources that all other resources use (e.g. virtual network, availability sets). The expression dependsOn enforces that this template is deployed before the other templates.
-•	Optional resources template. Conditionally deploys resources based on a parameter (e.g. a jumpbox)
-•	Member resources templates. Each within an application tier within has its own configuration. Within a tier different instance types can be defined. (e.g. first instance creates a new cluster, additional instances are added to the existing cluster). Each instance type will have its own deployment template.
-•	Scripts. Widely reusable scripts are applicable for each instance type (e.g. initialize and format additional disks). Custom scripts are created for specific customization purpose are different per instance type.
+
++ Main template (azuredeploy.json). Used for the input parameters.
++ Shared resouces template. Deploys the shared resources that all other resources use (e.g. virtual network, availability sets). The expression dependsOn enforces that this template is deployed before the other templates.
++ Optional resources template. Conditionally deploys resources based on a parameter (e.g. a jumpbox)
++ Member resources templates. Each within an application tier within has its own configuration. Within a tier different instance types can be defined. (e.g. first instance creates a new cluster, additional instances are added to the existing cluster). Each instance type will have its own deployment template.
++ Scripts. Widely reusable scripts are applicable for each instance type (e.g. initialize and format additional disks). Custom scripts are created for specific customization purpose are different per instance type.
  
 The main template is stored in the root of the folder, the other templates are stored in the nested folder. The scripts are stored in the scripts folder.
 See the starter template here for more information on passing validation.
