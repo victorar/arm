@@ -144,9 +144,6 @@ The following guidelines are relevant to the main deployment template and nested
 
  ```
  "variables": {
- 	"apiVersion": {
- 		"storage": { "storageAccounts": "2015-06-15" }
- 	},
  	"storage": {
  		"storageAccounts": {
  		"name": "[concat(uniquestring(resourceGroup().id),'storage')]",
