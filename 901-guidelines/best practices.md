@@ -4,31 +4,31 @@ This is a repo that contains all the currently available Azure Resource Manager 
 
 The following information is relevant to get started with contributing to this repository.
 
-+	Contribution guide. Describes the minimal guidelines for contributing.
-+	Best practices. Best practices for improving the quality of your template design.
-+	GitHub Tutorial. Step by step to get you started with GitHub.
++ Contribution guide. Describes the minimal guidelines for contributing.
++ Best practices. Best practices for improving the quality of your template design.
++ GitHub Tutorial. Step by step to get you started with GitHub.
 
 You are currently reading the best practices guide.
 
 ## Deployment template best practices
 
- *	It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
- *	It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
- *	A starter template is provided here for you to follow.
+ * It is a good practice to pass your template through a JSON linter to remove extraneous commas, parenthesis, brackets that may break the "Deploy to Azure" experience. Try http://jsonlint.com/ or a linter package for your favorite editing environment (Visual Studio Code, Atom, Sublime Text, Visual Studio etc.)
+ * It's also a good idea to format your JSON for better readability. You can use a JSON formatter package for your local editor or format online using this link.
+ * A starter template is provided here for you to follow.
 
 The following guidelines are relevant to the main deployment template and nested templates (if used).
 
-1.	Template parameters should follow camelCasing
-2.	Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
- *	Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
- *	Other things a user must know to complete a workflow (e.g. admin user name on a vm)
- *	Secrets (e.g. admin password on a vm)
- *	Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
- *	If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
-3.	Name variables using this scheme templateScenarioResourceName (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
-4.	Every parameter in the template must have the lower-case description tag specified using the metadata property. This looks like below
+1. Template parameters should follow camelCasing
+2. Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
+ * Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
+ * Other things a user must know to complete a workflow (e.g. admin user name on a vm)
+ * Secrets (e.g. admin password on a vm)
+ * Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
+ * If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
+3. Name variables using this scheme templateScenarioResourceName (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
+4. Every parameter in the template must have the lower-case description tag specified using the metadata property. This looks like below
 
-```
+ ```
 "parameters": {
   "storageAccountType": {
     "type": "string",
@@ -37,11 +37,11 @@ The following guidelines are relevant to the main deployment template and nested
     }
   }
 }
-```
+ ```
 
-5.	Do not hardcode the apiVersion for a resource. Create a complex object variable with the name apiVersion. Define a sub value for each resource provider, containing the api versions for each resource type used in the template. With this complex object the the apiVersion property of the resource uses the same namespace as the resource type. This also allows you to easily update an apiVersion for a specific resource type.
+5. Do not hardcode the apiVersion for a resource. Create a complex object variable with the name apiVersion. Define a sub value for each resource provider, containing the api versions for each resource type used in the template. With this complex object the the apiVersion property of the resource uses the same namespace as the resource type. This also allows you to easily update an apiVersion for a specific resource type.
 
-```
+ ```
 "variables": {
   "apiVersion": {
     "resources": { "deployments": "2015-01-01" },
@@ -64,11 +64,11 @@ The following guidelines are relevant to the main deployment template and nested
     }
   }
 ]
-```
+ ```
 
-6.	For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use "displayName" tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
+6. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use "displayName" tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
 
-```
+ ```
 "resources": [
   {
     "name": "[variables('storageAccountName')]",
@@ -82,11 +82,11 @@ The following guidelines are relevant to the main deployment template and nested
     }
   }
 ]
-```
+ ```
 	
-7.	Specifying a lower-case comments property for each resource in the template, helps other contributors to understand the purpose of the resource.
+7. Specifying a lower-case comments property for each resource in the template, helps other contributors to understand the purpose of the resource.
 
-```	
+ ```	
 "resources": [
   {
     "name": "[variables('storageAccountName')]",
@@ -99,11 +99,11 @@ The following guidelines are relevant to the main deployment template and nested
     }
   }
 ]
-```
+ ```
 
-8.	Do not use a parameter to specify the location. Use the location property of the resourceGroup instead. By using the resourceGroup().location expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
+8. Do not use a parameter to specify the location. Use the location property of the resourceGroup instead. By using the resourceGroup().location expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
 
-```
+ ```
 "resources": [
   {
     "name": "[variables('storageAccountName')]",
@@ -116,12 +116,16 @@ The following guidelines are relevant to the main deployment template and nested
     }
   }
 ]
-```
+ ```
 
-9.	Do not create a parameter for a storage account name. Storage account names need to be lower case and can't contain hyphens (-) in addition to other domain name restrictions. A storage account has a limit of 24 characters. They also need to be globally unique. To prevent any validation issue configure a variables (using the expression uniqueString and a static value storage). Storage accounts with a common prefix (uniquestring) will not get clustered on the same racks.
-62.	"variables": {
-63.	"storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]"
+9. Do not create a parameter for a storage account name. Storage account names need to be lower case and can't contain hyphens (-) in addition to other domain name restrictions. A storage account has a limit of 24 characters. They also need to be globally unique. To prevent any validation issue configure a variables (using the expression uniqueString and a static value storage). Storage accounts with a common prefix (uniquestring) will not get clustered on the same racks.
+	
+ ```
+"variables": {
+	"storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]"
 }
+ ```
+ 
 Note: Templates should consider storage accounts throughput constraints and deploy across multiple storage accounts where necessary. Templates should distribute virtual machine disks across multiple storage accounts to avoid platform throttling.
 
 64.	If you use a public endpoint in your template (e.g. blob storage public endpoint), do not hardcode the namespace. Use the reference function to retrieve the namespace dynamically. This allows you to deploy the template to different public namespace environments, without the requirement to change the endpoint in the template manually.
