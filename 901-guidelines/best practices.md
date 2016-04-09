@@ -140,7 +140,7 @@ The following guidelines are relevant to the main deployment template and nested
  
 12. Use tags to add metadata to resources allows you to add additional information about your resources. A good use case for tags is adding metadata to a resource for billing detail purposes. 
 
-13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('storage').storageAccounts.type]"`).
+13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('storage').storageAccounts.type]"`). Grouping variables helps you to keep track of related variables and improves readability of the template.
 
  ```
  "variables": {
