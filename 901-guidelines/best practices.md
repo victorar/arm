@@ -20,7 +20,7 @@ The following guidelines are relevant to the main deployment template and nested
 
 1. Template parameters should follow camelCasing
 2. Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
- * Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
+ + Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
  * Other things a user must know to complete a workflow (e.g. admin user name on a vm)
  * Secrets (e.g. admin password on a vm)
  * Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
