@@ -4,9 +4,9 @@ This repo contains all currently available Azure Resource Manager templates cont
 
 The following information is relevant to get started with contributing to this repository.
 
-+ Contribution guide. Describes the minimal guidelines for contributing.
-+ Best practices. Best practices for improving the quality of your template design.
-+ GitHub Tutorial. Step by step to get you started with GitHub.
++ **Contribution guide**. Describes the minimal guidelines for contributing.
++ **Best practices**. Best practices for improving the quality of your template design.
++ **GitHub Tutorial**. Step by step to get you started with GitHub.
 
 You are currently reading the best practices guide.
 
@@ -18,15 +18,15 @@ You are currently reading the best practices guide.
 
 The following guidelines are relevant to the main deployment template and nested templates (if used).
 
-1. Template parameters should follow camelCasing
+1. Template parameters should follow **camelCasing**.
 2. Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
  + Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
  + Other things a user must know to complete a workflow (e.g. admin user name on a vm)
  + Secrets (e.g. admin password on a vm)
  + Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
  + If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
-3. Name variables using this scheme templateScenarioResourceName (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
-4. Every parameter in the template must have the lower-case description tag specified using the metadata property. This looks like below
+3. Name **variables** using this scheme **templateScenarioResourceName** (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
+4. Every parameter in the template must have the **lower-case description** tag specified using the metadata property. This looks like below
 
  ```
  "parameters": {
@@ -39,7 +39,7 @@ The following guidelines are relevant to the main deployment template and nested
  }
  ```
 
-5. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use `displayName` tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
+5. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use **displayName** tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
 
  ```
  "resources": [
@@ -57,7 +57,7 @@ The following guidelines are relevant to the main deployment template and nested
  ]
  ```
 	
-7. Specifying a lower-case comments property for each resource in the template, helps other contributors to understand the purpose of the resource.
+7. Specifying a lower-case **comments** property for each resource in the template, helps other contributors to understand the purpose of the resource.
 
  ```	
  "resources": [
@@ -74,7 +74,7 @@ The following guidelines are relevant to the main deployment template and nested
  ]
  ```
 
-8. Do not use a parameter to specify the location. Use the location property of the resourceGroup instead. By using the resourceGroup().location expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
+8. Do not use a parameter to specify the **location**. Use the location property of the resourceGroup instead. By using the **resourceGroup().location** expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
 
  ```
  "resources": [
@@ -91,7 +91,7 @@ The following guidelines are relevant to the main deployment template and nested
  ]
  ```
 
-9. Do not create a parameter for a storage account name. Storage account names need to be lower case and can't contain hyphens (-) in addition to other domain name restrictions. A storage account has a limit of 24 characters. They also need to be globally unique. To prevent any validation issue configure a variables (using the expression uniqueString and a static value storage). Storage accounts with a common prefix (uniquestring) will not get clustered on the same racks.
+9. Do not create a parameter for a **storage account name**. Storage account names need to be lower case and can't contain hyphens (-) in addition to other domain name restrictions. A storage account has a limit of 24 characters. They also need to be globally unique. To prevent any validation issue configure a variables (using the expression **uniqueString** and a static value **storage**). Storage accounts with a common prefix (uniquestring) will not get clustered on the same racks.
 	
  ```
  "variables": {
@@ -101,10 +101,10 @@ The following guidelines are relevant to the main deployment template and nested
  
  Note: Templates should consider storage accounts throughput constraints and deploy across multiple storage accounts where necessary. Templates should distribute virtual machine disks across multiple storage accounts to avoid platform throttling.
 
-10. If you use a public endpoint in your template (e.g. blob storage public endpoint), do not hardcode the namespace. Use the reference function to retrieve the namespace dynamically. This allows you to deploy the template to different public namespace environments, without the requirement to change the endpoint in the template manually. Use the following reference to specify the osDisk. Define a variable for the storageAccountName (as specified in the previous example), a variable for the vmStorageAccountContainerName and a variable for the OSDiskName. 
+10. If you use a **public endpoint** in your template (e.g. blob storage public endpoint), **do not hardcode** the namespace. Use the **reference** function to retrieve the namespace dynamically. This allows you to deploy the template to different public namespace environments, without the requirement to change the endpoint in the template manually. Use the following reference to specify the osDisk. Define a variable for the storageAccountName (as specified in the previous example), a variable for the vmStorageAccountContainerName and a variable for the OSDiskName. 
 
  ```
- "osDisk": {    "name": "osdisk",    "vhd": {        "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"    }}
+ "osDisk": {"name": "osdisk","vhd": {"uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"}}
  ```
 
  If you have other values in your template configured with a public namespace, change these to reflect the same reference function. For example the storageUri property of the virtual machine diagnosticsProfile.
@@ -113,13 +113,13 @@ The following guidelines are relevant to the main deployment template and nested
  "diagnosticsProfile": {"bootDiagnostics": {"enabled": "true","storageUri":"[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob]"}}
  ```
  
- You can also reference an existing storage account in a different resource group.
+ You can also **reference** an **existing storage account** in a different resource group.
 
  ```
  "osDisk": {"name": "osdisk", "vhd": {"uri":"[concat(reference(resourceId(parameters('existingResourceGroup'), 'Microsoft.Storage/storageAccounts/', parameters('existingStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"}}
  ```
  
-11. Passwords must be passed into parameters of type securestring. Do not specify a defaultValue for a parameter that is used for a password or an SSH key. Passwords must also be passed to customScriptExtension using the commandToExecute property in protectedSettings.
+11. **Passwords** must be passed into parameters of type **securestring**. Do not specify a defaultValue for a parameter that is used for a password or an SSH key. Passwords must also be passed to **customScriptExtension** using the **commandToExecute** property in protectedSettings.
 
  ```
  "properties": {
