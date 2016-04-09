@@ -25,8 +25,7 @@ The following guidelines are relevant to the main deployment template and nested
  + Secrets (e.g. admin password on a vm)
  + Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
  + If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
-3. Name **variables** using this scheme **templateScenarioResourceName** (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
-4. Every parameter in the template must have the **lower-case description** tag specified using the metadata property. This looks like below
+3. Every parameter in the template should have the **lower-case description** tag specified using the metadata property. This looks like below
 
  ```
  "parameters": {
@@ -38,8 +37,26 @@ The following guidelines are relevant to the main deployment template and nested
    }
  }
  ```
+ 
+4. Do not use a parameter to specify the **location**. Use the location property of the resourceGroup instead. By using the **resourceGroup().location** expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
 
-5. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use **displayName** tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
+ ```
+ "resources": [
+   {
+     "name": "[variables('storageAccountName')]",
+     "type": "Microsoft.Storage/storageAccounts",
+     "apiVersion": "2015-06-15",
+     "location": "[resourceGroup().location]",
+     "comments": "This storage account is used to store the VM disks",
+     "properties": {
+       "accountType": "Standard_GRS"
+     }
+   }
+ ]
+ ```
+
+5. Name **variables** using this scheme **templateScenarioResourceName** (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
+6. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use **displayName** tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
 
  ```
  "resources": [
@@ -60,23 +77,6 @@ The following guidelines are relevant to the main deployment template and nested
 7. Specifying a lower-case **comments** property for each resource in the template, helps other contributors to understand the purpose of the resource.
 
  ```	
- "resources": [
-   {
-     "name": "[variables('storageAccountName')]",
-     "type": "Microsoft.Storage/storageAccounts",
-     "apiVersion": "2015-06-15",
-     "location": "[resourceGroup().location]",
-     "comments": "This storage account is used to store the VM disks",
-     "properties": {
-       "accountType": "Standard_GRS"
-     }
-   }
- ]
- ```
-
-8. Do not use a parameter to specify the **location**. Use the location property of the resourceGroup instead. By using the **resourceGroup().location** expression for all your resources, the resources in the template will automatically be deployed in the same location as the resource group.
-
- ```
  "resources": [
    {
      "name": "[variables('storageAccountName')]",
