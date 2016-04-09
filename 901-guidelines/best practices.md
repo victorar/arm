@@ -126,7 +126,7 @@ The following guidelines are relevant to the main deployment template and nested
  }
  ```
  
-Note: Templates should consider storage accounts throughput constraints and deploy across multiple storage accounts where necessary. Templates should distribute virtual machine disks across multiple storage accounts to avoid platform throttling.
+ Note: Templates should consider storage accounts throughput constraints and deploy across multiple storage accounts where necessary. Templates should distribute virtual machine disks across multiple storage accounts to avoid platform throttling.
 
 10. If you use a public endpoint in your template (e.g. blob storage public endpoint), do not hardcode the namespace. Use the reference function to retrieve the namespace dynamically. This allows you to deploy the template to different public namespace environments, without the requirement to change the endpoint in the template manually. Use the following reference to specify the osDisk. Define a variable for the storageAccountName (as specified in the previous example), a variable for the vmStorageAccountContainerName and a variable for the OSDiskName. 
 
@@ -134,19 +134,19 @@ Note: Templates should consider storage accounts throughput constraints and depl
  "osDisk": {    "name": "osdisk",    "vhd": {        "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"    }}
  ```
 
-If you have other values in your template configured with a public namespace, change these to reflect the same reference function. For example the storageUri property of the virtual machine diagnosticsProfile.
+ If you have other values in your template configured with a public namespace, change these to reflect the same reference function. For example the storageUri property of the virtual machine diagnosticsProfile.
 
  ```
  "diagnosticsProfile": {    "bootDiagnostics": {        "enabled": "true",        "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob]"    }}
  ```
  
-You can also reference an existing storage account in a different resource group.
+ You can also reference an existing storage account in a different resource group.
 
  ```
  "osDisk": {    "name": "osdisk",    "vhd": {        "uri": "[concat(reference(resourceId(parameters('existingResourceGroup'), 'Microsoft.Storage/storageAccounts/', parameters('existingStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"    }}
  ```
  
-Passwords must be passed into parameters of type securestring. Do not specify a defaultValue for a parameter that is used for a password or an SSH key. Passwords must also be passed to customScriptExtension using the commandToExecute property in protectedSettings.
+11. Passwords must be passed into parameters of type securestring. Do not specify a defaultValue for a parameter that is used for a password or an SSH key. Passwords must also be passed to customScriptExtension using the commandToExecute property in protectedSettings.
 
  ```
  "properties": {
@@ -163,9 +163,13 @@ Passwords must be passed into parameters of type securestring. Do not specify a 
  }
  ```
 
-In order to ensure that secrets which are passed as parameters to virtualMachines/extensions are encrypted, the protectedSettings property of the relevant extensions must be used.
-88.	Use tags to add metadata to resources allows you to add additional information about your resources. A good use case for tags is adding metadata to a resource for billing detail purposes. 
-89.	You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. "[variables('apiVersion').storage.storageAccounts]").
+ Note: In order to ensure that secrets which are passed as parameters to virtualMachines/extensions are encrypted, the protectedSettings property of the relevant extensions must be used.
+ 
+12. Use tags to add metadata to resources allows you to add additional information about your resources. A good use case for tags is adding metadata to a resource for billing detail purposes. 
+
+13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('apiVersion').storage.storageAccounts]"`).
+
+
 90.	"variables": {
 91.	"apiVersion": {
 92.	  "storage": { "storageAccounts": "2015-06-15" }
