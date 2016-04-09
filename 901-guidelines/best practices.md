@@ -39,41 +39,14 @@ The following guidelines are relevant to the main deployment template and nested
  }
  ```
 
-5. Do not hardcode the apiVersion for a resource. Create a complex object variable with the name apiVersion. Define a sub value for each resource provider, containing the api versions for each resource type used in the template. With this complex object the the apiVersion property of the resource uses the same namespace as the resource type. This also allows you to easily update an apiVersion for a specific resource type.
-
- ```
- "variables": {
-   "apiVersion": {
-     "resources": { "deployments": "2015-01-01" },
-     "storage": { "storageAccounts": "2015-06-15" },
-     "network": {
-       "virtualNetworks": "2015-06-15",
-       "networkSecurityGroups": "2015-06-15"
-     }
-   }
- },
- "resources": [
-   {
-     "name": "[variables('storageAccountName')]",
-     "type": "Microsoft.Storage/storageAccounts",
-     "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
-     "location": "[resourceGroup().location]",
-     "comments": "This storage account is used to store the VM disks",
-     "properties": {
-       "accountType": "Standard_GRS"
-     }
-   }
- ]
- ```
-
-6. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use "displayName" tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
+5. For many resources with a resource group, a name is not often relevant and using something like "storageAccount" may be acceptable.  You can also use variables for the name of a resource. Use `displayName` tags for a "friendly" name in the JSON outline view.  This should ideally match the name property value or property name.
 
  ```
  "resources": [
    {
      "name": "[variables('storageAccountName')]",
      "type": "Microsoft.Storage/storageAccounts",
-     "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
+     "apiVersion": "2015-06-15",
      "location": "[resourceGroup().location]",
      "comments": "This storage account is used to store the VM disks",
      "tags": { "displayName": "storageAccount" },
@@ -91,7 +64,7 @@ The following guidelines are relevant to the main deployment template and nested
    {
      "name": "[variables('storageAccountName')]",
      "type": "Microsoft.Storage/storageAccounts",
-     "apiVersion": "[variables('apiVersionStorage')]",
+     "apiVersion": "2015-06-15",
      "location": "[resourceGroup().location]",
      "comments": "This storage account is used to store the VM disks",
      "properties": {
@@ -108,7 +81,7 @@ The following guidelines are relevant to the main deployment template and nested
    {
      "name": "[variables('storageAccountName')]",
      "type": "Microsoft.Storage/storageAccounts",
-     "apiVersion": "[variables('apiVersionStorage')]",
+     "apiVersion": "2015-06-15",
      "location": "[resourceGroup().location]",
      "comments": "This storage account is used to store the VM disks",
      "properties": {
@@ -185,7 +158,7 @@ The following guidelines are relevant to the main deployment template and nested
 	 {
 	 "type": "Microsoft.Storage/storageAccounts",
 	 "name": "[variables('storage').storageAccounts.name]",
-	 "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
+	 "apiVersion": "[2015-06-15]",
 	 "location": "[resourceGroup().location]",
 	 "properties": {
 	 	"accountType": "[variables('storage').storageAccounts.type]"
@@ -263,16 +236,13 @@ It is possible to deploy a nested template based on parameter input. The paramet
     "optional": "[concat('nested/optional_', parameters('optionalResource'),'.json')]",
     "membertype1": "nested/membertype1.json",
     "membertype2": "nested/membertype2.json"
-  },
-  "apiVersion": {
-    "resources": { "deployments": "2015-01-01" }
   }
 },
 "resources": [
   {
     "name": "optional",
     "type": "Microsoft.Resources/deployments",
-    "apiVersion": "[variables('apiVersion').resources.deployments]",
+    "apiVersion": "2015-01-01",
     "dependsOn": [
       "[concat('Microsoft.Resources/deployments/', 'shared')]"
     ],
