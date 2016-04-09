@@ -127,7 +127,7 @@ The following guidelines are relevant to the main deployment template and nested
  	"type": "CustomScriptForLinux",
  	"settings": {
  		"fileUris": [
- 			"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/lamp-app/install_lamp.sh"
+ 			"[concat(variables('template').assets, '/lamp-app/install_lamp.sh')]"
  		]
  	},
  	"protectedSettings": {
