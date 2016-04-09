@@ -21,10 +21,10 @@ The following guidelines are relevant to the main deployment template and nested
 1. Template parameters should follow camelCasing
 2. Minimize parameters whenever possible, this allows for a good "hello world" experience where the user doesn't have to answer a number of questions to complete a deployment.  If you can use a variable or a literal, do so.  Users who want to parameterize something will likely have the skills to do so. Only provide parameters for:
  + Things that are globally unique (e.g. website name).  These are usually endpoints that the user may need to be aware of, however in many cases a unique name can be generated automatically.
- * Other things a user must know to complete a workflow (e.g. admin user name on a vm)
- * Secrets (e.g. admin password on a vm)
- * Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
- * If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
+ + Other things a user must know to complete a workflow (e.g. admin user name on a vm)
+ + Secrets (e.g. admin password on a vm)
+ + Share parameters whenever possible - e.g. the location parameter should be shared among resources that must or are likely to be in the same location
+ + If you must include a parameter, define a defaultValue, unless the parameter is used for a password.
 3. Name variables using this scheme templateScenarioResourceName (e.g. simpleLinuxVMVNET, userRoutesNSG, elasticsearchPublicIP etc.) that describe the scenario rather. This ensures when a user browses all the resources in the Portal there aren't a bunch of resources with the same name (e.g. myVNET, myPublicIP, myNSG)
 4. Every parameter in the template must have the lower-case description tag specified using the metadata property. This looks like below
 
@@ -170,61 +170,61 @@ The following guidelines are relevant to the main deployment template and nested
 13. You can group variables into complex objects. You can reference a value from a complex object in the format variable.subentry (e.g. `"[variables('apiVersion').storage.storageAccounts]"`).
 
  ```
-90.	"variables": {
-91.	"apiVersion": {
-92.	  "storage": { "storageAccounts": "2015-06-15" }
-93.	},
-94.	"storage": {
-95.	  "storageAccounts": {
-96.	    "name": "[concat(uniquestring(resourceGroup().id),'storage')]",
-97.	    "type": "Standard_LRS"
-98.	  }
-99.	}
-100.	},
-101.	"resources": [
-102.	{
-103.	  "type": "Microsoft.Storage/storageAccounts",
-104.	  "name": "[variables('storage').storageAccounts.name]",
-105.	  "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
-106.	  "location": "[resourceGroup().location]",
-107.	  "properties": {
-108.	    "accountType": "[variables('storage').storageAccounts.type]"
-109.	  }
-110.	}
-]
-```
+ "variables": {
+ 	"apiVersion": {
+ 		"storage": { "storageAccounts": "2015-06-15" }
+ 	},
+ 	"storage": {
+ 		"storageAccounts": {
+ 		"name": "[concat(uniquestring(resourceGroup().id),'storage')]",
+ 		"type": "Standard_LRS"
+ 		}
+ 	}
+ },
+ "resources": [
+	 {
+	 "type": "Microsoft.Storage/storageAccounts",
+	 "name": "[variables('storage').storageAccounts.name]",
+	 "apiVersion": "[variables('apiVersion').storage.storageAccounts]",
+	 "location": "[resourceGroup().location]",
+	 "properties": {
+	 	"accountType": "[variables('storage').storageAccounts.type]"
+	 }
+ 	 }
+ ]
+ ```
 
  A complex object cannot contain an expression that references a value from a complex object. Define a seperate variable for this purpose.
 
 14. The domainNameLabel property for publicIPAddresses used must be unique. domainNameLabel are required to be betweeen 3 and 63 charcters long and to follow the rules specified by this regular expression ^[a-z][a-z0-9-]{1,61}[a-z0-9]$. As the uniquestring function will generate a string that is 13 characters long in the example below it is presumed that the dnsPrefixString prefix string has been checked to be no more than 50 charcters long and to conform to those rules
 
-```
-112.	"parameters": {
-113.	"publicIPAddressName": {
-114.	  "type": "string"
-115.	},
-116.	"dnsPrefixString": {
-117.	  "type": "string",
-118.	  "maxLength": 50
-119.	}
-120.	},
-121.	"variables": {
-122.	"dnsPrefix": "[concat(parameters('dnsPrefixString'),uniquestring(resourceGroup().id))]"
-}
-```
+ ```
+ "parameters": {
+ 	"publicIPAddressName": {
+ 		"type": "string"
+ 	},
+ 	"dnsPrefixString": {
+ 		"type": "string",
+ 		"maxLength": 50
+ 	}
+ },
+ "variables": {
+ 	"dnsPrefix": "[concat(parameters('dnsPrefixString'),uniquestring(resourceGroup().id))]"
+ }
+ ```
 
 15. If a template creates any new publicIPAddresses then it should have an output section that provides details of the IP address and fully qualified domain created to easily retrieve these details after deployment. 
 
-```
-"outputs": {
-"fqdn": {
-  "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
-  "type": "string"
-},
-"ipaddress": {
-  "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).ipAddress]",
-  "type": "string"
-}
+ ```
+ "outputs": {
+ "fqdn": {
+ 	"value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+ 	"type": "string"
+ },
+ "ipaddress": {
+ 	"value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).ipAddress]",
+  	"type": "string"
+ }
 }
 ```
 
