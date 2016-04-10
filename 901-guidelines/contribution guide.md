@@ -11,16 +11,17 @@ You are currently reading the contribution guide.
 
 ## Contribution guide
 
-To make sure your template is added to Azure.com index, please follow these guidelines. Any templates that are out of compliance will be added to the blacklist and not be indexed on Azure.com
-Files, folders and naming conventions
+To make sure your template is added to Azure.com index, please follow these guidelines. Any templates that are out of compliance will be added to the **blacklist** and not be indexed on Azure.com
 
-1.	Every deployment template and its associated files must be contained in its own folder. Name this folder something that describes what your template does. Usually this naming pattern looks like appName-osName or level-platformCapability (e.g. 101-vm-user-image) 
- +	Required – Numbering should start at 101. 100 is reserved for things that need to be at the top.
- +	Protip - Try to keep the name of your template folder short so that it fits inside the Github folder name column width.
-2.	Github uses ASCII for ordering files and folder. For consistent ordering create all files and folder in lowercase. The only exception to this guideline is the README.md, that should be in the format UPPERCASE.lowercase.
-3.	Include a README.md file that explains how the template works. 
+## Files, folders and naming conventions
+
+1.	Every deployment template and its associated files must be contained in its own **folder**. Name this folder something that describes what your template does. Usually this naming pattern looks like **appName-osName** or **level-platformCapability** (e.g. 101-vm-user-image) 
+ +	**Required** – Numbering should start at 101. 100 is reserved for things that need to be at the top.
+ +	**Protip** - Try to keep the name of your template folder short so that it fits inside the Github folder name column width.
+2.	Github uses ASCII for ordering files and folder. For consistent ordering **create all files and folders in lowercase**. The only **exception** to this guideline is the **README.md**, that should be in the format **UPPERCASE.lowercase**.
+3.	Include a **README.md** file that explains how the template works. 
  + Guidelines on the README.md file below.
-4.	The template file must be named azuredeploy.json.
+4.	The deployment template file must be named **azuredeploy.json**.
 5.	There should be a parameters file named azuredeploy.parameters.json. 
  + Please fill out the values for the parameters according to rules defined in the template (allowed values etc.), For parameters without rules, a simple "changeme" will do as the acomghbot only checks for syntactic correctness using the ARM Validate Template API.
 6.	The template folder must contain a metadata.json file to allow the template to be indexed on Azure.com. 
