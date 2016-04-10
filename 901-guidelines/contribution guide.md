@@ -30,6 +30,8 @@ To make sure your template is added to Azure.com index, please follow these guid
 8.	Linked templates must be placed in a folder called **nested**.
 9.	Images used in the README.md must be placed in a folder called **images**. 
 10.	Any resources that need to be setup outside the template should be named prefixed with existing (e.g. existingVNET, existingDiagnosticsStorageAccount).
+
+![alt text](images/namingConvention.png "Naming convention")
  
 ## README.md
 
