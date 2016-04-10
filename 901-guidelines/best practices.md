@@ -1,6 +1,6 @@
 # Azure Resource Manager QuickStart Templates
 
-[Hello](#Nested%20templates)
+[Hello](### Nested templates)
 
 This repo contains all currently available Azure Resource Manager templates contributed by the community. A searchable template index is maintained at https://azure.microsoft.com/en-us/documentation/templates/
 
