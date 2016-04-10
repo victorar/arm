@@ -1,6 +1,5 @@
 # Azure Resource Manager QuickStart Templates
 
-[Nested templates](#Nested-templates)
 [Hello World](#hello-world)
 
 This repo contains all currently available Azure Resource Manager templates contributed by the community. A searchable template index is maintained at https://azure.microsoft.com/en-us/documentation/templates/
@@ -210,8 +209,6 @@ It is obvious to create a single deployment template for deploying a single reso
 * Create a single template for a single tier application
 * Create a nested templates deployment for a multitier application
 * Use nested templates for conditional deployment
-
-### Nested templates
 
 ### Hello world
 
