@@ -1,1 +1,1 @@
-[/test.md](/arm/901-guidelines/test.md)
+[/test.md](/901-guidelines/test.md)
