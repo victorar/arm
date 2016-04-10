@@ -1,11 +1,11 @@
-# %Solution name%
+# Solution name
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmarcvaneijk%2Farm%2Fmaster%2F100-single%2F100-template%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/></a>
 
-This template deploys a %solution name%. The %solution name% is a %description%
+This template deploys a *solution name*. The *solution name* is a *description*
 
-`Tags: %Tag1%, %Tag2%, %Tag3%`
+`Tags: Tag1, Tag2, Tag3`
 
 ## Solution diagram and deployed resources
 
@@ -13,15 +13,15 @@ This diagram displays an overview of the solution
 
 The following resources are deployed as part of the solution
 
-#### %Resource provider 1%
+#### *Resource provider 1*
 
-%Description Resource Provider 1%
+*Description Resource Provider 1*
 
-+ **%Resource type 1A%**: %Description Resource type 1A%
-+ **%Resource type 1B%**: %Description Resource type 1B%
-+ **%Resource type 1C%**: %Description Resource type 1C%
++ ~**Resource type 1A**~: ~Description Resource type 1A~
++ ~**Resource type 1B**~: ~Description Resource type 1B~
++ ~**Resource type 1C**~: ~Description Resource type 1C~
 
-#### %Resource provider 2%
+#### ~Resource provider 2~
 
 %Description Resource Provider 2%
 
