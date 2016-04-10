@@ -1,10 +1,1 @@
-[../../test.md](../../test.md)
-
-[../test.md](../test.md)
-
-[./test.md](./test.md)
-
-[././test.md](././test.md)
-
-
-[/test.md](/test.md)
+[/test.md](/arm/901.guidelines/test.md)
