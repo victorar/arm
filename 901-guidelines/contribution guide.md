@@ -86,7 +86,7 @@ The metadata.json file will be validated using these rules
 +	Must be in yyyy-mm-dd format.
 +	The date must not be in the future to the date of the pull request
 
-### Common errors from acomghbot
+## Common errors from acomghbot
 
 acomghbot is a bot designed to enforce the above rules and check the syntactic correctness of the template using the ARM Validate Template [API](https://msdn.microsoft.com/en-us/library/azure/dn790547.aspx). Below are some of the more cryptic error messages you might receive from the bot and how to solve these issues.
 
