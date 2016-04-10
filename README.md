@@ -12,3 +12,5 @@ The variable section in the azuredeploy.json contains a complex object called va
 [../test.md](../test.md)
 
 [./test.md](./test.md)
+
+[/test.md](/test.md)
