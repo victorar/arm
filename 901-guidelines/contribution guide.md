@@ -144,7 +144,7 @@ If you're making use of raw.githubusercontent.com links within your template con
 +	Ensure any raw.githubusercontent.com links which refer to content within your pull request points to `https://raw.githubusercontent.com/Azure/azure-quickstart-templates/...' and **NOT** your fork.
 +	All raw.githubusercontent.com links are placed in your azuredeploy.json and you pass the link down into your scripts & linked templates via this top-level template. This ensures we re-link correctly from your pull-request repository and branch.
 
-Note: You can find an example of this approach in the best practices.
+Note: You can find an [example](../best%20practices.md#nested-templates) in the best practices.
 
 ## Template Pre-requisites
 
