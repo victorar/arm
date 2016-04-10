@@ -137,7 +137,7 @@ Here's an example in an `azuredeploy.parameters.json` file:
 }
 ```
 
-## raw.githubusercontent.com Links
+### raw.githubusercontent.com Links
 
 If you're making use of raw.githubusercontent.com links within your template contribution (within the template file itself or any scripts in your contribution) please ensure the following:
 
@@ -147,7 +147,7 @@ If you're making use of raw.githubusercontent.com links within your template con
 
 Note: You can find an [example](../best%20practices.md#nested-templates) in the best practices.
 
-## Template Pre-requisites
+### Template Pre-requisites
 
 If your template has some pre-requisite such as an Azure Active Directory application or service principal, we don't support this yet. To bypass the CI workflow include a file called .ci_skip in the root of your template folder.
 
