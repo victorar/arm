@@ -92,21 +92,15 @@ acomghbot is a bot designed to enforce the above rules and check the syntactic c
 
 +	This error is received when the parameters file contains a parameter that is not defined in the template.
 
- ```
  The file azuredeploy.json is not valid. Response from ARM API: BadRequest - {"error":{"code":"InvalidTemplate","message":"Deployment template validation failed: 'The template parameters 'vmDnsName' are not valid; they are not present in the original template and can therefore not be provided at deployment time. The only supported parameters for this template are 'newStorageAccountName, adminUsername, adminPassword, dnsNameForPublicIP, windowsOSVersion, sizeOfDiskInGB'.'."}}
- ```
 
 +	This error is received when a parameter in the parameter file has an empty value.
 
- ```
  The file azuredeploy.json is not valid. Response from ARM API: BadRequest - {"error":{"code":"InvalidTemplate","message":"Deployment template validation failed: 'The template resource '' at line '66' and column '6' is not valid. The name property cannot be null or empty'."}}
- ```
 
 +	This error message is received when a value entered in the parameters file is different from the allowed values defined for the parameter in the template file.
 
- ```
  The file azuredeploy.json is not valid. Response from ARM API: BadRequest - {"error":{"code":"InvalidTemplate","message":"Deployment template validation failed: 'The provided value for the template parameter 'publicIPAddressType' at line '40' and column '29' is not valid.'."}}
- ```
 
 ## Travis CI
 
