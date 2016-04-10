@@ -5,3 +5,6 @@ The templates in this repository will deploy to Microsoft Azure and Microsoft Az
 + 200-nested contains nested template deployments
 
 The variable section in the azuredeploy.json contains a complex object called variable describes the resourceTypes and minimal apiVersions required within your environment to succesfully deploy the template.
+
+[../test.md](../test.md)
+[./test.md](./test.md)
