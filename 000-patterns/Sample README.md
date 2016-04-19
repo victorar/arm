@@ -1,7 +1,13 @@
 # Solution name
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmarcvaneijk%2Farm%2Fmaster%2F100-single%2F100-template%2Fazuredeploy.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/></a>
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcvaneijk%2Farm%2Fmaster%2F100-single%2F100-template%2Fazuredeploy.json" target="_blank">
+    <img src="http://armviz.io/visualizebutton.png"/>
+</a>
+
 
 This template deploys a **solution name**. The **solution name** is a **description**
 
