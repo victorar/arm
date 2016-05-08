@@ -19,6 +19,7 @@
     "ImagePublisher": "MicrosoftWindowsServer",
     "ImageOffer": "WindowsServer",
     "dcVmSize": "Standard_D1",
+    "dcIpAddress": "10.0.0.100",
     "s2dVmSize": "Standard_D1",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
     "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]"
@@ -51,6 +52,9 @@
           "addressPrefixes": [
             "[variables('vnetPrefix')]"
           ]
+        },
+        "dhcpOptions": {
+          "dnsServers": ["[variables('dcIpAddress')]"]
         },
         "subnets": [
           {
