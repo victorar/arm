@@ -1,0 +1,44 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "common": {
+      "type": "object"
+    }
+  },
+  "variables": {
+    
+  },
+  "resources": [
+    {
+      "name": "[parameters('common').storageAccount.name]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "properties": { "accountType": "parameters('common').storageAccount.type" }
+    },
+    {
+      "name": "parameters('common').virtualNetwork.name",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": { "addressPrefixes": [ "parameters('common').virtualNetwork.addressPrefix" ] },
+        "subnets": [
+          {
+            "name": "subnet1",
+            "properties": { "addressPrefix": "parameters('common').virtualNetwork.subnet1" }
+          },
+          {
+            "name": "subnet2",
+            "properties": { "addressPrefix": "parameters('common').virtualNetwork.subnet2" }
+          }
+
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    
+  }
+}
