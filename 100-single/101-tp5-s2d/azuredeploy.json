@@ -83,7 +83,8 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAllocationMethod": "Dynamic",
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[variables('dcIpAddress')]",
               "subnet": {
                 "id": "[variables('SubnetRef')]"
               },
