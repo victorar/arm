@@ -1,0 +1,218 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "UserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "Password": {
+            "type": "securestring"
+        }
+    },
+  "variables": {
+    "storageName": "[concat(uniqueString(resourceGroup().id), 'storage')]",
+    "storageAccountType": "Standard_LRS",
+    "vnetPrefix": "10.0.0.0/16",
+    "vnetSubnetName": "Subnet-1",
+    "vnetSubnetPrefix": "10.0.0.0/24",
+    "ImagePublisher": "MicrosoftWindowsServer",
+    "ImageOffer": "WindowsServer",
+    "dcVmSize": "Standard_D1",
+    "s2dVmSize": "Standard_D1",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
+    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]",
+  },
+    "resources": [
+      {
+        "name": "[variables('storageName')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [ ],
+        "tags": {
+          "displayName": "storage"
+        },
+        "properties": {
+          "accountType": "[variables('storageAccountType')]"
+        }
+      },
+        {
+            "name": "vnet",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "vnet"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnetSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnetSubnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "dcNic",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]"
+            ],
+            "tags": {
+                "displayName": "dcNic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('SubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "dc",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
+            ],
+            "tags": {
+                "displayName": "dc"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('dcVmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "dc",
+                    "adminUsername": "[parameters('Username')]",
+                    "adminPassword": "[parameters('Password')]"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[variables('ImagePublisher')]",
+                    "offer": "[variables('ImageOffer')]",
+                    "sku": "Windows-Server-Technical-Preview",
+                    "version": "latest"
+                  },
+                    "osDisk": {
+                        "name": "dcOSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dcNic')]"
+                        }
+                    ]
+                }
+            }
+        },
+      {
+        "name": "[concat('s2d-', copyindex(), '-nic')]",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "copy": {
+          "name": "s2d-nic-copy",
+          "count": 3
+        },
+        "dependsOn": [
+          "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]"
+        ],
+        "tags": {
+          "displayName": "s2dNic"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "[variables('SubnetRef')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "[concat('s2d-', copyindex())]",
+        "type": "Microsoft.Compute/virtualMachines",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "copy": {
+          "name": "s2d-vm-copy",
+          "count": 3
+        },
+        "dependsOn": [
+          "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+          "[concat('Microsoft.Network/networkInterfaces/', 's2d-', copyindex(), '-nic')]"
+        ],
+        "tags": {
+          "displayName": "s2d"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "[variables('s2dVmSize')]"
+          },
+          "osProfile": {
+            "computerName": "[concat('s2d-', copyindex())]",
+            "adminUsername": "[parameters('Username')]",
+            "adminPassword": "[parameters('Password')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "[variables('ImagePublisher')]",
+              "offer": "[variables('ImageOffer')]",
+              "sku": "Windows-Server-Technical-Preview",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "s2dOSDisk",
+              "vhd": {
+                "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/s2d-',copyindex(), '-OSDisk.vhd')]"
+              },
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('s2d-', copyindex(), '-nic'))]"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+    }
+}
