@@ -21,198 +21,242 @@
     "dcVmSize": "Standard_D1",
     "s2dVmSize": "Standard_D1",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
-    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]",
+    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]"
   },
-    "resources": [
-      {
-        "name": "[variables('storageName')]",
-        "type": "Microsoft.Storage/storageAccounts",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "2015-06-15",
-        "dependsOn": [ ],
-        "tags": {
-          "displayName": "storage"
-        },
-        "properties": {
-          "accountType": "[variables('storageAccountType')]"
-        }
+  "resources": [
+    {
+      "name": "[variables('storageName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "storage"
       },
-        {
-            "name": "vnet",
-            "type": "Microsoft.Network/virtualNetworks",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "vnet"
-            },
+      "properties": {
+        "accountType": "[variables('storageAccountType')]"
+      }
+    },
+    {
+      "name": "vnet",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "vnet"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('vnetPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('vnetSubnetName')]",
             "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "[variables('vnetPrefix')]"
-                    ]
-                },
-                "subnets": [
-                    {
-                        "name": "[variables('vnetSubnetName')]",
-                        "properties": {
-                            "addressPrefix": "[variables('vnetSubnetPrefix')]"
-                        }
-                    }
-                ]
+              "addressPrefix": "[variables('vnetSubnetPrefix')]"
             }
-        },
-        {
-            "name": "dcNic",
-            "type": "Microsoft.Network/networkInterfaces",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]"
-            ],
-            "tags": {
-                "displayName": "dcNic"
-            },
+          }
+        ]
+      }
+    },
+    {
+      "name": "dcNic",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]",
+        "[concat('Microsoft.Network/publicIPAddresses/', 'dcPubIP')]"
+      ],
+      "tags": {
+        "displayName": "dcNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
             "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[variables('SubnetRef')]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "name": "dc",
-            "type": "Microsoft.Compute/virtualMachines",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
-                "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
-            ],
-            "tags": {
-                "displayName": "dc"
-            },
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[variables('dcVmSize')]"
-                },
-                "osProfile": {
-                    "computerName": "dc",
-                    "adminUsername": "[parameters('Username')]",
-                    "adminPassword": "[parameters('Password')]"
-                },
-                "storageProfile": {
-                  "imageReference": {
-                    "publisher": "[variables('ImagePublisher')]",
-                    "offer": "[variables('ImageOffer')]",
-                    "sku": "Windows-Server-Technical-Preview",
-                    "version": "latest"
-                  },
-                    "osDisk": {
-                        "name": "dcOSDisk",
-                        "vhd": {
-                            "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
-                        },
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dcNic')]"
-                        }
-                    ]
-                }
-            }
-        },
-      {
-        "name": "[concat('s2d-', copyindex(), '-nic')]",
-        "type": "Microsoft.Network/networkInterfaces",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "2015-06-15",
-        "copy": {
-          "name": "s2d-nic-copy",
-          "count": 3
-        },
-        "dependsOn": [
-          "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]"
-        ],
-        "tags": {
-          "displayName": "s2dNic"
-        },
-        "properties": {
-          "ipConfigurations": [
-            {
-              "name": "ipconfig1",
-              "properties": {
-                "privateIPAllocationMethod": "Dynamic",
-                "subnet": {
-                  "id": "[variables('SubnetRef')]"
-                }
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('SubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'dcPubIP')]"
               }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dcPubIP",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "dcPubIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('dc', uniqueString(resourceGroup().id))]"
+        }
+      }
+    },
+    {
+      "name": "dc",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
+      ],
+      "tags": {
+        "displayName": "dc"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('dcVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "dc",
+          "adminUsername": "[parameters('Username')]",
+          "adminPassword": "[parameters('Password')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('ImagePublisher')]",
+            "offer": "[variables('ImageOffer')]",
+            "sku": "Windows-Server-Technical-Preview",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "dcOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dcNic')]"
             }
           ]
         }
+      }
+    },
+    {
+      "name": "[concat('s2d-', copyindex(), '-nic')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "s2d-nic-copy",
+        "count": 3
       },
-      {
-        "name": "[concat('s2d-', copyindex())]",
-        "type": "Microsoft.Compute/virtualMachines",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "2015-06-15",
-        "copy": {
-          "name": "s2d-vm-copy",
-          "count": 3
-        },
-        "dependsOn": [
-          "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
-          "[concat('Microsoft.Network/networkInterfaces/', 's2d-', copyindex(), '-nic')]"
-        ],
-        "tags": {
-          "displayName": "s2d"
-        },
-        "properties": {
-          "hardwareProfile": {
-            "vmSize": "[variables('s2dVmSize')]"
-          },
-          "osProfile": {
-            "computerName": "[concat('s2d-', copyindex())]",
-            "adminUsername": "[parameters('Username')]",
-            "adminPassword": "[parameters('Password')]"
-          },
-          "storageProfile": {
-            "imageReference": {
-              "publisher": "[variables('ImagePublisher')]",
-              "offer": "[variables('ImageOffer')]",
-              "sku": "Windows-Server-Technical-Preview",
-              "version": "latest"
-            },
-            "osDisk": {
-              "name": "s2dOSDisk",
-              "vhd": {
-                "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/s2d-',copyindex(), '-OSDisk.vhd')]"
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]",
+        "[concat('Microsoft.Network/publicIPAddresses/', concat('s2dPubIP-', copyindex()))]"
+      ],
+      "tags": {
+        "displayName": "s2dNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('SubnetRef')]"
               },
-              "caching": "ReadWrite",
-              "createOption": "FromImage"
-            }
-          },
-          "networkProfile": {
-            "networkInterfaces": [
-              {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('s2d-', copyindex(), '-nic'))]"
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('s2dPubIP-', copyindex()))]"
               }
-            ]
+            }
           }
+        ]
+      }
+    },
+    {
+      "name": "[concat('s2dPubIP-', copyindex())]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "s2d-PubIP-copy",
+        "count": 3
+      },
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "s2dPubIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('s2d', uniqueString(resourceGroup().id), copyindex())]"
         }
       }
-    ],
+    },
+    {
+      "name": "[concat('s2d-', copyindex())]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "s2d-vm-copy",
+        "count": 3
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', 's2d-', copyindex(), '-nic')]"
+      ],
+      "tags": {
+        "displayName": "s2d"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('s2dVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat('s2d-', copyindex())]",
+          "adminUsername": "[parameters('Username')]",
+          "adminPassword": "[parameters('Password')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('ImagePublisher')]",
+            "offer": "[variables('ImageOffer')]",
+            "sku": "Windows-Server-Technical-Preview",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "s2dOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/s2d-',copyindex(), '-OSDisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('s2d-', copyindex(), '-nic'))]"
+            }
+          ]
+        }
+      }
+    }
+  ],
     "outputs": {
     }
 }
