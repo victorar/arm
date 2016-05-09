@@ -22,7 +22,8 @@
     "dcIpAddress": "10.0.0.100",
     "s2dVmSize": "Standard_D1",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
-    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]"
+    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]",
+      "dc-DSCConfigurationFunction": "dc-DSCConfiguration.ps1\\Main"
   },
   "resources": [
     {
@@ -147,7 +148,18 @@
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          }
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "10",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-datadisk.vhd')]"
+              },
+              "createOption": "Empty"
+            }
+          ]
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -156,7 +168,43 @@
             }
           ]
         }
-      }
+      },
+        "resources": [
+            {
+                "name": "dc-DSC",
+                "type": "extensions",
+                "location": "[resourceGroup().location]",
+                "apiVersion": "2015-06-15",
+                "dependsOn": [
+                    "[concat('Microsoft.Compute/virtualMachines/', 'dc')]"
+                ],
+                "tags": {
+                    "displayName": "dc-DSC"
+                },
+                "properties": {
+                    "publisher": "Microsoft.Powershell",
+                    "type": "DSC",
+                    "typeHandlerVersion": "2.9",
+                    "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "modulesUrl": "https://raw.githubusercontent.com/marcvaneijk/arm/master/100-single/101-tp5-s2d/scripts/CreateADPDC.ps1.zip",
+                    "configurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+                    "properties": {
+                      "domainName": "my.domain.local",
+                      "adminCreds": {
+                        "userName": "[parameters('UserName')]",
+                        "password": "PrivateSettingsRef:adminPassword"
+                      }
+                    }
+                  },
+                  "protectedSettings": {
+                    "items": {
+                      "adminPassword": "[parameters('Password')]"
+                    }
+                  }
+                }
+            }
+        ]
     },
     {
       "name": "[concat('s2d-', copyindex(), '-nic')]",

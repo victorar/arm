@@ -1,0 +1,68 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "UserName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "Password": {
+      "type": "securestring"
+    }
+  },
+  "variables": {
+    "template": {
+      "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/200-nested/201-tp5-s2d/",
+      "shared": "shared.json",
+      "dc": "dc.json",
+      "s2d": "s2d.json"
+    },
+    "storageAccount": {
+      "name": "[concat(uniqueString(resourceGroup().id), 'storage')]",
+      "type": "Standard_LRS"
+    },
+    "virtualNetworks": {
+      "vNetPrefix": "10.0.0.0/16",
+      "vnetSubnetName": "Subnet-1",
+      "vnetSubnetPrefix": "10.0.0.0/24"
+    },
+    "virtualMachines": {
+      "ImagePublisher": "MicrosoftWindowsServer",
+      "ImageOffer": "WindowsServer",
+      "dcVmSize": "Standard_D1",
+      "dcIpAddress": "10.0.0.100",
+      "s2dVmSize": "Standard_D1",
+      "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]"
+    },
+    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]"
+  },
+  "resources": [
+    {
+      "name": "shared",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').shared)]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
+    {
+      "name": "dc",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').dc)]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+
+    }
+  ],
+
+  "outputs": { }
+}

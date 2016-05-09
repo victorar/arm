@@ -1,0 +1,154 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "common": {
+      "type": "object"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "dcNic",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]",
+        "[concat('Microsoft.Network/publicIPAddresses/', 'dcPubIP')]"
+      ],
+      "tags": {
+        "displayName": "dcNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[variables('dcIpAddress')]",
+              "subnet": {
+                "id": "[variables('SubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'dcPubIP')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dcPubIP",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "dcPubIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('dc', uniqueString(resourceGroup().id))]"
+        }
+      }
+    },
+    {
+      "name": "dc",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
+      ],
+      "tags": {
+        "displayName": "dc"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('dcVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "dc",
+          "adminUsername": "[parameters('Username')]",
+          "adminPassword": "[parameters('Password')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('ImagePublisher')]",
+            "offer": "[variables('ImageOffer')]",
+            "sku": "Windows-Server-Technical-Preview",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "dcOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "10",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-datadisk.vhd')]"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dcNic')]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "dc-DSC",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-06-15",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', 'dc')]"
+          ],
+          "tags": {
+            "displayName": "dc-DSC"
+          },
+          "properties": {
+            "publisher": "Microsoft.Powershell",
+            "type": "DSC",
+            "typeHandlerVersion": "2.9",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "modulesUrl": "https://raw.githubusercontent.com/marcvaneijk/arm/master/100-single/101-tp5-s2d/scripts/CreateADPDC.ps1.zip",
+              "configurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+              "properties": {
+                "domainName": "my.domain.local",
+                "adminCreds": {
+                  "userName": "[parameters('UserName')]",
+                  "password": "PrivateSettingsRef:adminPassword"
+                }
+              }
+            },
+            "protectedSettings": {
+              "items": {
+                "adminPassword": "[parameters('Password')]"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+  }
+}
