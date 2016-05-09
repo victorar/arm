@@ -17,24 +17,30 @@
       "dc": "dc.json",
       "s2d": "s2d.json"
     },
-    "storageAccount": {
-      "name": "[concat(uniqueString(resourceGroup().id), 'storage')]",
-      "type": "Standard_LRS"
+    "common": {
+      "credentials": {
+        "username": "[parameters('UserName')]",
+        "password": "[parameters('Password')]"
+      },
+      "storageAccount": {
+        "name": "[concat(uniqueString(resourceGroup().id), 'storage')]",
+        "type": "Standard_LRS"
+      },
+      "virtualNetworks": {
+        "vNetPrefix": "10.0.0.0/16",
+        "vnetSubnetName": "Subnet-1",
+        "vnetSubnetPrefix": "10.0.0.0/24"
+      },
+      "virtualMachines": {
+        "ImagePublisher": "MicrosoftWindowsServer",
+        "ImageOffer": "WindowsServer",
+        "dcVmSize": "Standard_D1",
+        "dcIpAddress": "10.0.0.100",
+        "s2dVmSize": "Standard_D1",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]"
+      }
     },
-    "virtualNetworks": {
-      "vNetPrefix": "10.0.0.0/16",
-      "vnetSubnetName": "Subnet-1",
-      "vnetSubnetPrefix": "10.0.0.0/24"
-    },
-    "virtualMachines": {
-      "ImagePublisher": "MicrosoftWindowsServer",
-      "ImageOffer": "WindowsServer",
-      "dcVmSize": "Standard_D1",
-      "dcIpAddress": "10.0.0.100",
-      "s2dVmSize": "Standard_D1",
-      "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]"
-    },
-    "SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('vnetSubnetName'))]"
+    "SubnetRef": "[concat(variables('common').virtualMachines.vnetID, '/subnets/', variables('common').virtualNetworks.vnetSubnetName)]"
   },
   "resources": [
     {
@@ -46,6 +52,11 @@
         "templateLink": {
           "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').shared)]",
           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccount": {
+            "value": "[variables('common')]"
+          }
         }
       }
     },
@@ -58,6 +69,14 @@
         "templateLink": {
           "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').dc)]",
           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccount": {
+            "value": "[variables('common')]"
+          },
+          "subnetRef": {
+            "value": "[variables('SubnetRef')]"
+          }
         }
       }
 

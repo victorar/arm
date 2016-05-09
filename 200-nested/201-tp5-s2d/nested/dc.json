@@ -4,6 +4,9 @@
   "parameters": {
     "common": {
       "type": "object"
+    },
+    "SubnetRef": {
+      "type": "string"
     }
   },
   "variables": {
@@ -15,7 +18,6 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]",
         "[concat('Microsoft.Network/publicIPAddresses/', 'dcPubIP')]"
       ],
       "tags": {
@@ -27,9 +29,9 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[variables('dcIpAddress')]",
+              "privateIPAddress": "[parameters('common').virtualMachines.dcIpAddress]",
               "subnet": {
-                "id": "[variables('SubnetRef')]"
+                "id": "[parameters('SubnetRef')]"
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'dcPubIP')]"
@@ -61,7 +63,6 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
       ],
       "tags": {
@@ -69,24 +70,24 @@
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('dcVmSize')]"
+          "vmSize": "[parameters('common').virtualMachines.dcVmSize]"
         },
         "osProfile": {
           "computerName": "dc",
-          "adminUsername": "[parameters('Username')]",
-          "adminPassword": "[parameters('Password')]"
+          "adminUsername": "[parameters('common').credentials.username]",
+          "adminPassword": "[parameters('common').credentials.password]"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('ImagePublisher')]",
-            "offer": "[variables('ImageOffer')]",
+            "publisher": "[parameters('common').virtualMachines.imagePublisher]",
+            "offer": "[parameters('common').virtualMachines.imageOffer]",
             "sku": "Windows-Server-Technical-Preview",
             "version": "latest"
           },
           "osDisk": {
             "name": "dcOSDisk",
             "vhd": {
-              "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
+              "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -97,7 +98,7 @@
               "diskSizeGB": "10",
               "lun": 0,
               "vhd": {
-                "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/dc-datadisk.vhd')]"
+                "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/dc-datadisk.vhd')]"
               },
               "createOption": "Empty"
             }
@@ -134,14 +135,14 @@
               "properties": {
                 "domainName": "my.domain.local",
                 "adminCreds": {
-                  "userName": "[parameters('UserName')]",
+                  "userName": "[parameters('common').credentials.username]",
                   "password": "PrivateSettingsRef:adminPassword"
                 }
               }
             },
             "protectedSettings": {
               "items": {
-                "adminPassword": "[parameters('Password')]"
+                "adminPassword": "[parameters('common').credentials.password]"
               }
             }
           }

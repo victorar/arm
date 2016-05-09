@@ -10,7 +10,7 @@
   },
   "resources": [
     {
-      "name": "[variables('storageName')]",
+      "name": "[parameters('common').storageAccount.name]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
@@ -19,7 +19,7 @@
         "displayName": "storage"
       },
       "properties": {
-        "accountType": "[variables('storageAccountType')]"
+        "accountType": "[parameters('common').storageAccount.type]"
       }
     },
     {
@@ -34,17 +34,17 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('vnetPrefix')]"
+            "[parameters('common').virtualNetworks.vNetPrefix]"
           ]
         },
         "dhcpOptions": {
-          "dnsServers": [ "[variables('dcIpAddress')]" ]
+          "dnsServers": [ "[parameters('common').virtualMachines.dcIpAddress]" ]
         },
         "subnets": [
           {
-            "name": "[variables('vnetSubnetName')]",
+            "name": "[parameters('common').virtualNetworks.vnetSubnetName]",
             "properties": {
-              "addressPrefix": "[variables('vnetSubnetPrefix')]"
+              "addressPrefix": "[parameters('common').virtualNetworks.vnetSubnetPrefix]"
             }
           }
         ]
