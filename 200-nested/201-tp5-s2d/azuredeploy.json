@@ -22,7 +22,7 @@
         "username": "[parameters('UserName')]",
         "password": "[parameters('Password')]"
       },
-      "storageAccount": {
+      "storageAccounts": {
         "name": "[concat(uniqueString(resourceGroup().id), 'storage')]",
         "type": "Standard_LRS"
       },
@@ -54,7 +54,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "storageAccount": {
+          "common": {
             "value": "[variables('common')]"
           }
         }
@@ -64,6 +64,9 @@
       "name": "dc",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -71,7 +74,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "storageAccount": {
+          "common": {
             "value": "[variables('common')]"
           },
           "subnetRef": {
