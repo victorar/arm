@@ -154,7 +154,9 @@
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
-      "dependsOn": [ ],
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc', 'dc-DSC')]"
+      ],
       "tags": {
         "displayName": "vnet"
       },
