@@ -22,7 +22,6 @@
         "count": 3
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', 'vnet')]",
         "[concat('Microsoft.Network/publicIPAddresses/', concat('s2dPubIP-', copyindex()))]"
       ],
       "tags": {
