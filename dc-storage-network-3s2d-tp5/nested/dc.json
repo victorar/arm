@@ -1,0 +1,185 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "common": {
+      "type": "object"
+    },
+    "SubnetRef": {
+      "type": "string"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "dcNic",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', 'dcPubIP')]"
+      ],
+      "tags": {
+        "displayName": "dcNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('common').virtualMachines.dcIpAddress]",
+              "subnet": {
+                "id": "[parameters('SubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'dcPubIP')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dcPubIP",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "dcPubIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('dc', uniqueString(resourceGroup().id))]"
+        }
+      }
+    },
+    {
+      "name": "dc",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
+      ],
+      "tags": {
+        "displayName": "dc"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('common').virtualMachines.dcVmSize]"
+        },
+        "osProfile": {
+          "computerName": "dc",
+          "adminUsername": "[parameters('common').credentials.username]",
+          "adminPassword": "[parameters('common').credentials.password]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('common').virtualMachines.imagePublisher]",
+            "offer": "[parameters('common').virtualMachines.imageOffer]",
+            "sku": "Windows-Server-Technical-Preview",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "dcOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "10",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/dc-datadisk.vhd')]"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dcNic')]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "dc-DSC",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-06-15",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', 'dc')]"
+          ],
+          "tags": {
+            "displayName": "dc-DSC"
+          },
+          "properties": {
+            "publisher": "Microsoft.Powershell",
+            "type": "DSC",
+            "typeHandlerVersion": "2.9",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "modulesUrl": "[concat(parameters('common').template.base,'/scripts/CreateADPDC.ps1.zip')]",
+              "configurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+              "properties": {
+                "domainName": "my.domain.local",
+                "adminCreds": {
+                  "userName": "[parameters('common').credentials.username]",
+                  "password": "PrivateSettingsRef:adminPassword"
+                }
+              }
+            },
+            "protectedSettings": {
+              "items": {
+                "adminPassword": "[parameters('common').credentials.password]"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "vnet",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc', 'dc-DSC')]"
+      ],
+      "tags": {
+        "displayName": "vnet"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('common').virtualNetworks.vNetPrefix]"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [ "[parameters('common').virtualMachines.dcIpAddress]" ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('common').virtualNetworks.vnetSubnetName]",
+            "properties": {
+              "addressPrefix": "[parameters('common').virtualNetworks.vnetSubnetPrefix]"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

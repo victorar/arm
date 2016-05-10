@@ -1,0 +1,113 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "username": {
+      "type": "string",
+      "minLength": 1
+    },
+    "password": {
+      "type": "securestring"
+    }
+  },
+  "variables": {
+
+    "common": {
+      "template": {
+        "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/dc-storage-network-3s2d-tp5/",
+        "shared": "shared.json",
+        "dc": "dc.json",
+        "s2d": "s2d.json"
+      },
+      "credentials": {
+        "username": "[parameters('username')]",
+        "password": "[parameters('password')]"
+      },
+      "storageAccounts": {
+        "name": "[concat(uniqueString(resourceGroup().id), 'storage')]",
+        "type": "Standard_LRS"
+      },
+      "virtualNetworks": {
+        "vnetPrefix": "10.0.0.0/16",
+        "vnetSubnetName": "Subnet-1",
+        "vnetSubnetPrefix": "10.0.0.0/24"
+      },
+      "virtualMachines": {
+        "imagePublisher": "MicrosoftWindowsServer",
+        "imageOffer": "WindowsServer",
+        "dcVmSize": "Standard_D1",
+        "dcIpAddress": "10.0.0.100",
+        "s2dVmSize": "Standard_D1",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]"
+      }
+    },
+    "subnetRef": "[concat(variables('common').virtualMachines.vnetID, '/subnets/', variables('common').virtualNetworks.vnetSubnetName)]"
+  },
+  "resources": [
+    {
+      "name": "shared",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.shared)]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "common": {
+            "value": "[variables('common')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "dc",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.dc)]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "common": {
+            "value": "[variables('common')]"
+          },
+          "subnetRef": {
+            "value": "[variables('SubnetRef')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "s2d",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'dc')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.s2d)]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "common": {
+            "value": "[variables('common')]"
+          },
+          "subnetRef": {
+            "value": "[variables('subnetRef')]"
+          }
+        }
+      }
+    }
+  ],
+
+  "outputs": { }
+}

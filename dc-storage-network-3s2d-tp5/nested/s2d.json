@@ -4,6 +4,9 @@
   "parameters": {
     "common": {
       "type": "object"
+    },
+    "subnetRef": {
+      "type": "string"
     }
   },
   "variables": {
@@ -32,7 +35,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('SubnetRef')]"
+                "id": "[parameters('subnetRef')]"
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('s2dPubIP-', copyindex()))]"
@@ -72,7 +75,7 @@
         "count": 3
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('common').storageAccounts.name)]",
         "[concat('Microsoft.Network/networkInterfaces/', 's2d-', copyindex(), '-nic')]"
       ],
       "tags": {
@@ -80,24 +83,24 @@
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('s2dVmSize')]"
+          "vmSize": "[parameters('common').virtualMachines.s2dVmSize]"
         },
         "osProfile": {
           "computerName": "[concat('s2d-', copyindex())]",
-          "adminUsername": "[parameters('Username')]",
-          "adminPassword": "[parameters('Password')]"
+          "adminUsername": "[parameters('common').credentials.username]",
+          "adminPassword": "[parameters('common').credentials.password]"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('ImagePublisher')]",
-            "offer": "[variables('ImageOffer')]",
+            "publisher": "[parameters('common').virtualMachines.imagePublisher]",
+            "offer": "[parameters('common').virtualMachines.imageOffer]",
             "sku": "Windows-Server-Technical-Preview",
             "version": "latest"
           },
           "osDisk": {
             "name": "s2dOSDisk",
             "vhd": {
-              "uri": "[concat('http://', variables('storageName'), '.blob.core.windows.net/', 'vhds/s2d-',copyindex(), '-OSDisk.vhd')]"
+              "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/s2d-',copyindex(), '-OSDisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"

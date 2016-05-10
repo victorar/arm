@@ -10,6 +10,19 @@
   },
   "resources": [
     {
+      "name": "[parameters('common').storageAccounts.name]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "storage"
+      },
+      "properties": {
+        "accountType": "[parameters('common').storageAccounts.type]"
+      }
+    },
+    {
       "name": "vnet",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
@@ -23,9 +36,6 @@
           "addressPrefixes": [
             "[parameters('common').virtualNetworks.vNetPrefix]"
           ]
-        },
-        "dhcpOptions": {
-          "dnsServers": [ "[parameters('common').virtualMachines.dcIpAddress]" ]
         },
         "subnets": [
           {
