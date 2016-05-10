@@ -130,7 +130,7 @@
             "typeHandlerVersion": "2.9",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "modulesUrl": "https://raw.githubusercontent.com/marcvaneijk/arm/master/100-single/101-tp5-s2d/scripts/CreateADPDC.ps1.zip",
+              "modulesUrl": "[concat(parameters('common').template.base,'/scripts/CreateADPDC.ps1.zip')]",
               "configurationFunction": "CreateADPDC.ps1\\CreateADPDC",
               "properties": {
                 "domainName": "my.domain.local",
@@ -148,6 +148,34 @@
           }
         }
       ]
+    },
+    {
+      "name": "vnet",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "vnet"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('common').virtualNetworks.vNetPrefix]"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [ "[parameters('common').virtualMachines.dcIpAddress]" ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('common').virtualNetworks.vnetSubnetName]",
+            "properties": {
+              "addressPrefix": "[parameters('common').virtualNetworks.vnetSubnetPrefix]"
+            }
+          }
+        ]
+      }
     }
   ],
   "outputs": {

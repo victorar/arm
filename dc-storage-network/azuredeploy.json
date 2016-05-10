@@ -11,13 +11,14 @@
     }
   },
   "variables": {
-    "template": {
-      "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/200-nested/201-tp5-s2d/",
-      "shared": "shared.json",
-      "dc": "dc.json",
-      "s2d": "s2d.json"
-    },
+
     "common": {
+      "template": {
+        "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/dc-storage-network/",
+        "shared": "shared.json",
+        "dc": "dc.json",
+        "s2d": "s2d.json"
+      },
       "credentials": {
         "username": "[parameters('UserName')]",
         "password": "[parameters('Password')]"
@@ -50,7 +51,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').shared)]",
+          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.shared)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -70,7 +71,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('template').base, 'nested/'), variables('template').dc)]",
+          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.dc)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -82,7 +83,6 @@
           }
         }
       }
-
     }
   ],
 
