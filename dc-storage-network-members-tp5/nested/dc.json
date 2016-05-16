@@ -133,7 +133,7 @@
               "modulesUrl": "[concat(parameters('common').template.base,'/scripts/CreateADPDC.ps1.zip')]",
               "configurationFunction": "CreateADPDC.ps1\\CreateADPDC",
               "properties": {
-                "domainName": "my.domain.local",
+                "domainName": "[parameters('common').virtualMachines.domainFqdn]",
                 "adminCreds": {
                   "userName": "[parameters('common').credentials.username]",
                   "password": "PrivateSettingsRef:adminPassword"
