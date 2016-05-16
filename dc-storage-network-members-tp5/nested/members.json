@@ -120,6 +120,10 @@
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "domainJoin",
+        "count": 3
+      },
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex()))]"
       ],
