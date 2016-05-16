@@ -14,39 +14,39 @@
   },
   "resources": [
     {
-      "name": "[concat(parameters('common').virtualMachines.vmPrefix, 'PubIP-', copyindex())]",
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-publicip')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "copy": {
-        "name": "PubIP-copy",
-        "count": 3
+        "name": "copy-publicip",
+        "count": "[parameters('common').virtualMachines.count]"
       },
       "dependsOn": [ ],
       "tags": {
-        "displayName": "PubIP"
+        "displayName": "members-publicip"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('common').virtualMachines.vmPrefix, uniqueString(resourceGroup().id), copyindex())]"
+          "domainNameLabel": "[concat(parameters('common').virtualMachines.vmPrefix, uniqueString(resourceGroup().id), copyindex(1))]"
         }
       }
     },
     {
-      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(), '-nic')]",
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-nic')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "copy": {
-        "name": "nic-copy",
-        "count": 3
+        "name": "copy-nic",
+        "count": "[parameters('common').virtualMachines.count]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', concat(parameters('common').virtualMachines.vmPrefix, 'PubIP-', copyindex()))]"
+        "[concat('Microsoft.Network/publicIPAddresses/', concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-publicip'))]"
       ],
       "tags": {
-        "displayName": "Nic"
+        "displayName": "members-nic"
       },
       "properties": {
         "ipConfigurations": [
@@ -58,7 +58,7 @@
                 "id": "[parameters('subnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('common').virtualMachines.vmPrefix, 'PubIP-', copyindex()))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-publicip'))]"
               }
             }
           }
@@ -67,26 +67,26 @@
     },
 
     {
-      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex())]",
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(1))]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "copy": {
-        "name": "vm-copy",
-        "count": 3
+        "name": "copy-vm",
+        "count": "[parameters('common').virtualMachines.count]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('common').virtualMachines.vmPrefix, copyindex(), '-nic')]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('common').virtualMachines.vmPrefix, copyindex(1), '-nic')]"
       ],
       "tags": {
-        "displayName": "Vm"
+        "displayName": "members"
       },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('common').virtualMachines.membersVmSize]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex())]",
+          "computerName": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(1))]",
           "adminUsername": "[parameters('common').credentials.username]",
           "adminPassword": "[parameters('common').credentials.password]"
         },
@@ -100,16 +100,27 @@
           "osDisk": {
             "name": "vmOSDisk",
             "vhd": {
-              "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/', parameters('common').virtualMachines.vmPrefix,copyindex(), '-OSDisk.vhd')]"
+              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('common').storageAccounts.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhds/', parameters('common').virtualMachines.vmPrefix, copyindex(1), '-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          }
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "10",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('common').storageAccounts.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhds/', parameters('common').virtualMachines.vmPrefix, copyindex(1), '-datadisk1.vhd')]"
+              },
+              "createOption": "Empty"
+            }
+          ]
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('common').virtualMachines.vmPrefix, copyindex(), '-nic'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-nic'))]"
             }
           ]
         }
@@ -117,9 +128,5 @@
     }
   ],
   "outputs": {
-    "domainFqdn": {
-      "type": "string",
-      "value": "[parameters('common').virtualMachines.domainFqdn]"
-    }
   }
 }

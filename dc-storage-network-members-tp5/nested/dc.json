@@ -13,15 +13,31 @@
   },
   "resources": [
     {
-      "name": "dcNic",
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, 'dc', '-publicip')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "dc-publicip"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat('dc', uniqueString(resourceGroup().id))]"
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, 'dc', '-nic')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', 'dcPubIP')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', concat(parameters('common').virtualMachines.vmPrefix, 'dc', '-publicip'))]"
       ],
       "tags": {
-        "displayName": "dcNic"
+        "displayName": "dc-nic"
       },
       "properties": {
         "ipConfigurations": [
@@ -34,7 +50,7 @@
                 "id": "[parameters('SubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'dcPubIP')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-publicip'))]"
               }
             }
           }
@@ -42,28 +58,12 @@
       }
     },
     {
-      "name": "dcPubIP",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
-      "dependsOn": [ ],
-      "tags": {
-        "displayName": "dcPubIP"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[concat('dc', uniqueString(resourceGroup().id))]"
-        }
-      }
-    },
-    {
-      "name": "dc",
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, 'dc')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'dcNic')]"
+        "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('common').virtualMachines.vmPrefix, 'dc', '-nic'))]"
       ],
       "tags": {
         "displayName": "dc"
@@ -87,7 +87,7 @@
           "osDisk": {
             "name": "dcOSDisk",
             "vhd": {
-              "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/dc-osdisk.vhd')]"
+              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('common').storageAccounts.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhds/', parameters('common').virtualMachines.vmPrefix, '-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -98,7 +98,7 @@
               "diskSizeGB": "10",
               "lun": 0,
               "vhd": {
-                "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/dc-datadisk.vhd')]"
+                "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', parameters('common').storageAccounts.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhds/', parameters('common').virtualMachines.vmPrefix, '-datadisk1.vhd')]"
               },
               "createOption": "Empty"
             }
@@ -107,7 +107,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dcNic')]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('common').virtualMachines.vmPrefix, 'dc', '-nic'))]"
             }
           ]
         }
@@ -119,10 +119,10 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', 'dc')]"
+            "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, 'dc'))]"
           ],
           "tags": {
-            "displayName": "dc-DSC"
+            "displayName": "dc-dsc"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -155,7 +155,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc', 'dc-DSC')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(parameters('common').virtualMachines.vmPrefix, 'dc'), 'dc-DSC')]"
       ],
       "tags": {
         "displayName": "vnet"
