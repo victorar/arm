@@ -114,37 +114,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "[concat(concat(parameters('common').virtualMachines.vmPrefix, copyindex()),'/joindomain')]",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2015-06-15",
-      "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "domainJoin",
-        "count": 3
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex()))]"
-      ],
-      "tags": {
-        "displayName": "domainJoin"
-      },
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "JsonADDomainExtension",
-        "typeHandlerVersion": "1.0",
-        "settings": {
-          "name": "mve.local",
-          "OUPath": "",
-          "User": "mve\\marcvaneijk",
-          "Restart": "true",
-          "Options": 3
-        },
-        "protectedSettings": {
-          "password": "[parameters('common').credentials.password]"
-        }
-      }
     }
   ],
   "outputs": {
