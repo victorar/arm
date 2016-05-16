@@ -113,35 +113,33 @@
             }
           ]
         }
+      }
+    },
+    {
+      "name": "[concat(concat(parameters('common').virtualMachines.vmPrefix, copyindex()),'/joindomain')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex()))]"
+      ],
+      "tags": {
+        "displayName": "domainJoin"
       },
-        "resources": [
-          {
-            "name": "[concat(concat(parameters('common').virtualMachines.vmPrefix, copyindex()),'/joindomain')]",
-            "type": "extensions",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-              "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex()))]"
-            ],
-            "tags": {
-              "displayName": "domainJoin"
-            },
-            "properties": {
-              "publisher": "Microsoft.Compute",
-              "type": "JsonADDomainExtension",
-              "typeHandlerVersion": "1.0",
-              "settings": {
-                "name": "[parameters('common').virtualMachines.domainFqdn]",
-                "User": "[concat(parameters('common').virtualMachines.domainFqdn, '\\', parameters('common').credentials.username)]",
-                "Restart": "true",
-                "Options": 3
-              },
-              "protectedSettings": {
-                "password": "[parameters('common').credentials.password]"
-              }
-            }
-          }
-        ]
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "JsonADDomainExtension",
+        "typeHandlerVersion": "1.0",
+        "settings": {
+          "name": "[parameters('common').virtualMachines.domainFqdn]",
+          "User": "[concat(parameters('common').virtualMachines.domainFqdn, '\\', parameters('common').credentials.username)]",
+          "Restart": "true",
+          "Options": 3
+        },
+        "protectedSettings": {
+          "password": "[parameters('common').credentials.password]"
+        }
+      }
     }
   ],
   "outputs": {
