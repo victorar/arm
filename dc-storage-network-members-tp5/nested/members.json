@@ -135,9 +135,9 @@
         "type": "JsonADDomainExtension",
         "typeHandlerVersion": "1.0",
         "settings": {
-          "name": "[parameters('common').virtualMachines.domainFqdn]",
+          "name": "mve.local",
           "OUPath": "",
-          "User": "[concat(parameters('common').virtualMachines.domainFqdn, '\\', parameters('common').credentials.username)]",
+          "User": "mve\\marcvaneijk",
           "Restart": "true",
           "Options": 3
         },
