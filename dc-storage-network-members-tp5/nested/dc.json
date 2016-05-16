@@ -50,7 +50,7 @@
                 "id": "[parameters('SubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('common').virtualMachines.vmPrefix, copyindex(1), '-publicip'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('common').virtualMachines.vmPrefix, 'dc', '-publicip'))]"
               }
             }
           }
