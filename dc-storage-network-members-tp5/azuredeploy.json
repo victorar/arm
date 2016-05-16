@@ -8,16 +8,24 @@
     },
     "password": {
       "type": "securestring"
+    },
+    "domainFqdn": {
+      "type": "string",
+      "defaultValue": "mve.local"
+    },
+    "vmPrefix": {
+      "type": "string",
+      "defaultValue": "azure"
     }
   },
   "variables": {
 
     "common": {
       "template": {
-        "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/dc-storage-network-3s2d-tp5/",
+        "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/dc-storage-network-members-tp5/",
         "shared": "shared.json",
         "dc": "dc.json",
-        "s2d": "s2d.json"
+        "members": "members.json"
       },
       "credentials": {
         "username": "[parameters('username')]",
@@ -37,8 +45,10 @@
         "imageOffer": "WindowsServer",
         "dcVmSize": "Standard_D1",
         "dcIpAddress": "10.0.0.100",
-        "s2dVmSize": "Standard_D1",
-        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]"
+        "membersVmSize": "Standard_D1",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
+        "domainFqdn": "[parameters('domainFqdn')]",
+        "vmPrefix": "[parameters('vmPrefix')]"
       }
     },
     "subnetRef": "[concat(variables('common').virtualMachines.vnetID, '/subnets/', variables('common').virtualNetworks.vnetSubnetName)]"
@@ -85,7 +95,7 @@
       }
     },
     {
-      "name": "s2d",
+      "name": "members",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
@@ -94,7 +104,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.s2d)]",
+          "uri": "[uri(concat(variables('common').template.base, 'nested/'), variables('common').template.members)]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

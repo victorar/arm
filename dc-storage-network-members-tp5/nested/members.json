@@ -1,0 +1,161 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "common": {
+      "type": "object"
+    },
+    "subnetRef": {
+      "type": "string"
+    },
+      "_artifactsLocation": {
+          "type": "string",
+          "metadata": {
+              "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+          }
+      },
+      "_artifactsLocationSasToken": {
+          "type": "securestring",
+          "metadata": {
+              "description": "Auto-generated token to access _artifactsLocation"
+          }
+      }
+  },
+  "variables": {
+      "domainJoinConfigurationFunction": "domainJoinConfiguration.ps1\\Main"
+  },
+  "resources": [
+    {
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, 'PubIP-', copyindex())]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "PubIP-copy",
+        "count": 3
+      },
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "PubIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[concat(parameters('common').virtualMachines.vmPrefix, uniqueString(resourceGroup().id), copyindex())]"
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(), '-nic')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "nic-copy",
+        "count": 3
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', concat(parameters('common').virtualMachines.vmPrefix, 'PubIP-', copyindex()))]"
+      ],
+      "tags": {
+        "displayName": "Nic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[parameters('subnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('common').virtualMachines.vmPrefix, 'PubIP-', copyindex()))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex())]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "vm-copy",
+        "count": 3
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('common').virtualMachines.vmPrefix, copyindex(), '-nic')]"
+      ],
+      "tags": {
+        "displayName": "Vm"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('common').virtualMachines.membersVmSize]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex())]",
+          "adminUsername": "[parameters('common').credentials.username]",
+          "adminPassword": "[parameters('common').credentials.password]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('common').virtualMachines.imagePublisher]",
+            "offer": "[parameters('common').virtualMachines.imageOffer]",
+            "sku": "Windows-Server-Technical-Preview",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "vmOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('common').storageAccounts.name, '.blob.core.windows.net/', 'vhds/', parameters('common').virtualMachines.vmPrefix,copyindex(), '-OSDisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('common').virtualMachines.vmPrefix, copyindex(), '-nic'))]"
+            }
+          ]
+        }
+      },
+        "resources": [
+          {
+            "name": "concat(parameters('common').virtualMachines.vmPrefix, copyindex(),'/joindomain')",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+              "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex()))]"
+            ],
+            "tags": {
+              "displayName": "domainJoin"
+            },
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "JsonADDomainExtension",
+              "typeHandlerVersion": "1.0",
+              "settings": {
+                "name": "[parameters('common').virtualMachines.domainFqdn]",
+                "User": "[concat(parameters('common').virtualMachines.domainFqdn, '\\', parameters('common').credentials.username)]",
+                "Restart": "true",
+                "Options": 3
+              },
+              "protectedSettings": {
+                "password": "[parameters('common').credentials.password]"
+              }
+            }
+          }
+        ]
+    }
+  ],
+  "outputs": {
+  }
+}
