@@ -116,7 +116,7 @@
       },
         "resources": [
           {
-            "name": "concat(parameters('common').virtualMachines.vmPrefix, copyindex(),'/joindomain')",
+            "name": "[concat(parameters('common').virtualMachines.vmPrefix, copyindex(),'/joindomain')]",
             "type": "extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
