@@ -130,8 +130,8 @@
             "typeHandlerVersion": "2.9",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "modulesUrl": "[concat(parameters('common').template.base,'/scripts/CreateADPDC.ps1.zip')]",
-              "configurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+              "modulesUrl": "[concat(parameters('common').template.base,'/scripts/NewForest.ps1.zip')]",
+              "configurationFunction": "NewForest.ps1.zip\\NewForest",
               "properties": {
                 "domainName": "[parameters('common').virtualMachines.domainFqdn]",
                 "adminCreds": {
