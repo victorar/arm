@@ -131,7 +131,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "modulesUrl": "[concat(parameters('common').template.base,'/scripts/NewForest.ps1.zip')]",
-              "configurationFunction": "NewForest.ps1.zip\\NewForest",
+              "configurationFunction": "NewForest.ps1\\NewForest",
               "properties": {
                 "domainName": "[parameters('common').virtualMachines.domainFqdn]",
                 "adminCreds": {
