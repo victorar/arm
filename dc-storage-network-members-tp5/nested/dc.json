@@ -127,7 +127,7 @@
           "properties": {
             "publisher": "Microsoft.Powershell",
             "type": "DSC",
-            "typeHandlerVersion": "2.9",
+            "typeHandlerVersion": "2.19",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "modulesUrl": "[concat(parameters('common').template.base,'/scripts/NewForest.ps1.zip')]",
