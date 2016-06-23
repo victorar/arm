@@ -128,7 +128,7 @@
     },
 
     {
-      "name": "[concat(concat(parameters('common').virtualMachines.vmPrefix, copyindex()),'/joindomain')]",
+      "name": "[concat(concat(parameters('common').virtualMachines.vmPrefix, copyindex(1)),'/joindomain')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
@@ -137,7 +137,7 @@
         "count": 3
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex()))]"
+        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('common').virtualMachines.vmPrefix, copyindex(1)))]"
       ],
       "tags": {
         "displayName": "domainJoin"
@@ -147,9 +147,9 @@
         "type": "JsonADDomainExtension",
         "typeHandlerVersion": "1.3",
         "settings": {
-          "name": "mve.local",
+          "name": "[parameters('common').virtualMachines.domainFqdn]",
           "OUPath": "",
-          "User": "mve\\marcvaneijk",
+          "User": "[concat(parameters('common').virtualMachines.domainFqdn, '\\', parameters('common').credentials.username)]",
           "Restart": "true",
           "Options": 3
         },
