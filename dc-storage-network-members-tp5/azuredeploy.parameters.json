@@ -3,16 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "username": {
-        "value": "victorar"
+        "value": "youruser"
       },      
       "domainFQDN": {
-        "value": "var.local"
+        "value": "yourdomain.local"
       },
       "vmPrefix": {
         "value": "vm"
-      },
-      "baseTemplate": {
-        "value": "https://raw.githubusercontent.com/victorar/arm/test-dsc-extension/dc-storage-network-members-tp5/"
       }
     }
 }
