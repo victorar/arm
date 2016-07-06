@@ -16,13 +16,17 @@
     "vmPrefix": {
       "type": "string",
       "defaultValue": "azure"
+    },
+    "baseTemplate": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/marcvaneijk/arm/master/dc-storage-network-members-tp5/"
     }
   },
   "variables": {
 
     "common": {
       "template": {
-        "base": "https://raw.githubusercontent.com/marcvaneijk/arm/master/dc-storage-network-members-tp5/",
+        "base": "[parameters('baseTemplate')]",
         "shared": "shared.json",
         "dc": "dc.json",
         "members": "members.json"
