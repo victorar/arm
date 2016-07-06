@@ -11,7 +11,7 @@
     },
     "domainFqdn": {
       "type": "string",
-      "defaultValue": "mve.local"
+      "defaultValue": "mve2.local"
     },
     "vmPrefix": {
       "type": "string",
